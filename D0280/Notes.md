@@ -109,8 +109,45 @@
   
 # **Chapter 2:** Verifying the Health of a Cluster
 
-## **2.1** Describing OpenShift Installation Methods
+## **2.1.** Describing OpenShift Installation Methods
 
 - Red Hat OpenShift Container Platform provides two main installation methods:-
     
-  - 
+  - **Full-stack Automation:** With this method, the OpenShift installer provisions all compute, storage, and network resources from a cloud or virtualization provider. You provide the installer with minimum data, such as credentials to a cloud provider and the size of the initial cluster, and then the installer deploys a fully functional OpenShift cluster.
+  
+  - **Pre-existing Infrastructure:** With this method, you configure a set of compute, storage, and network resources and the OpenShift installer configures an initial cluster using these resources. You can use this method to set up an OpenShift cluster using bare-metal servers and cloud or virtualization providers that are not supported by the full-stack automation method.
+
+- At the time of the Red Hat OpenShift Container Platform 4.5 release, the set of cloud providers supported for the full-stack automation method includes Amazon Web Services (AWS), Google Cloud Platform (GCP), Microsoft Azure, and Red Hat OpenStack Platform using the standard Intel architecture (x86). Supported virtualization providers and architectures for full-stack automation include VMware, Red Hat Virtualization, IBM Power, and IBM System Z.
+
+- **Comparing Installation methods:** Certain features of OpenShift require using the full-stack automation method, for example, cluster automatic scaling. However, it is expected that future releases might relax such requirements.
+
+    Using the full-stack automation method, all nodes of the new cluster run Red Hat Enterprise Linux CoreOS (RHEL CoreOS). Using the pre-existing infrastructure method, worker nodes can be set up using Red Hat Enterprise Linux (RHEL), but the control plane (master nodes) still requires RHEL CoreOS.
+
+## **2.5.** Introducing OpenShift Dynamic Storage
+
+- Containers have ephemeral storage by default. For example, when a container is deleted, all the files and data inside it are deleted also. To preserve the files, containers offer **two main ways of maintaining persistent storage: volumes and bind mounts**. Volumes are the preferred OpenShift way of managing persistent storage. Developers working with containers on a local system can mount a local directory into a container using a bind mount.
+  
+- Volumes are managed manually by the administrator or dynamically through a storage class.
+
+- OpenShift cluster administrators use the Kubernetes persistent volume framework to manage persistent storage for the users of a cluster. There are two ways of provisioning storage for the cluster: static and dynamic. Static provisioning requires the cluster administrator to create persistent volumes manually. Dynamic provisioning uses storage classes to create the persistent volumes on demand.
+  
+- A persistent volume claim (PVC) belongs to a specific project. To create a PVC, you must specify the access mode and size, among other options. Once created, a PVC cannot be shared between projects. Developers use a PVC to access a persistent volume (PV). Persistent volumes are not exclusive to projects and are accessible across the entire OpenShift cluster. When a persistent volume binds to a persistent volume claim, the persistent volume cannot be bound to another persistent volume claim.
+
+- If a PVC cannot find a PV that matches all criteria, the PVC enters a pending state and waits until an appropriate PV becomes available. A cluster administrator can manually create the PV or a storage class can dynamically create the PV. A persistent volume claim that does not specify a storage class uses the default storage class. A bound persistent volume can be mounted as a volume to a specific mount point in the pod (for example, /var/lib/pgsql for a PostgreSQL database).
+
+- To add a volume to an application create a _PersistentVolumeClaim_ resource and add it to the application as a volume. Create the persistent volume claim using either a Kubernetes manifest or the oc set volumes command.
+
+- OpenShift defines three access modes that are summarized below:-
+  - **ReadWriteMany (RWX):** Kubernetes can mount the volume as read-write on many nodes.
+  - **ReadOnlyMany(ROX):** Kubernetes can mount the volume as read-only on many nodes.
+  - **ReadWriteOnce(RWO):** Kubernetes can mount the volume as read-write on only a single node.
+
+## **2.7.** Summary
+
+- Red Hat OpenShift Container Platform provides two main installation methods: full-stack automation, and pre-existing infrastructure.
+
+- Future releases are expected to add more cloud and virtualization providers, such as VMware, Red Hat Virtualization, and IBM System Z.
+
+- An OpenShift node based on Red Hat Enterprise Linux CoreOS runs very few local services that would require direct access to a node to inspect their status. Most of the system services run as containers, the main exceptions are the CRI-O container engine and the Kubelet.
+
+- The oc get node, oc adm top, oc adm node-logs, and oc adm debug commands provide troubleshooting information about OpenShift nodes. 
