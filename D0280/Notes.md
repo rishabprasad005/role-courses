@@ -104,6 +104,8 @@
 - RHOCP 4 provides a number of services on top of Kubernetes, such as an internal container image registry, storage, networking providers, and centralized logging and monitoring.
 - Operators package applications that manage Kubernetes resources, and the Operator Lifecycle Manager (OLM) handles installation and management of operators.
 - OperatorHub.io is an online catalog for discovering operators.
+
+<br/>
   
 # **Chapter 2:** Verifying the Health of a Cluster
 
