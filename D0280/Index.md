@@ -1,4 +1,4 @@
-># **1.** Describing the Red Hat OpenShift Container Platform
+# **1.** Describing the Red Hat OpenShift Container Platform
 
 ## **1.1** Red Hat OpenShift Container Platform Features
 
