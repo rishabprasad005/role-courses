@@ -57,10 +57,87 @@
   - create a PersistentVolumeClaim API object
 - Deleting Persistent Volume Claims
 
-## **2.6.** Introducing OpenShift Dynamic Storage [GUIDED EXCERCISE]
+## **2.6.** Guided Exercise: Introducing OpenShift Dynamic Storage
 
 - In this exercise, you will deploy a PostgreSQL database using a persistent volume claim and identify its dynamically allocated volume.
 - You should be able to:-
   - Identify the default storage settings of an OpenShift cluster.
   - Create persistent volume claims.
   - Manage persistent volumes.
+
+# **Chapter 3:** Configuring Authentication and Authorization
+
+## **3.1.** Configuring Identity Providers
+
+- After completing this section, you should be able to configure the HTPasswd identity provider for OpenShift authentication
+- Describing OpenShift Users, Groups, Role, Identity and Service Account
+- Authenticating API Requests
+  - Introducing the Authentication Operator
+  - Introducing Identity Providers
+- Authenticating as a Cluster Administrator
+  - Authenticating Using the X.509 Certificate
+  - Authenticating Using the Virtual Use
+  - Deleting the Virtual User
+- Configuring the HTPasswd Identity Provider
+  - Configuring the OAuth Custom Resource
+  - Updating the OAuth Custom Resource
+- Managing Users with the HTPasswd Identity Provider
+  - Creating an HTPasswd File
+  - Add or update credentials
+  - Delete credentials
+  - Creating the HTPasswd Secret
+  - Extracting Secret Data
+  - Updating the HTPasswd Secret 
+- Deleting Users and Identities
+- Assigning Administrative Privileges
+
+## **3.2.** Guided Exercise: Configuring Identity Providers
+
+- In this exercise, you will configure the HTPasswd identity provider and create users for cluster administrators
+- You should be able to:-
+  - Create users and passwords for HTPasswd authentication.
+  - Configure the Identity Provider for HTPasswd authentication.
+  - update password of exixsting user
+  - add new users
+  - Assign cluster administration rights to users.
+
+## **3.3.** Defining and Applying Permissions Using RBAC
+
+- After completing this section, you should be able to define role-based access controls and apply permissions to users
+- Introducing Role-based Access Control (RBAC)
+  - Authorization Process
+  - Change a regular user to a cluster administrator
+  - Change a cluster administrator to a regular user
+  - oc adm policy & oc policy command
+- Default Roles in OpenShift 
+  - admin
+  - basic-user
+  - cluster-admin
+  - cluster-status
+  - edit
+  - self-provisioner
+  - view
+- User Types in OpenShift
+  - Regular Users
+  - System Users
+  - Service Acounts
+
+## **3.4.** Guided Exercise: Defining and Applying Permissions using RBAC
+
+- In this exercise, you will define role-based access controls and apply permissions to users
+- You should be able to:-
+  - Remove project creation privileges from users who are not OpenShift cluster administrators.
+  - Create OpenShift groups and add members to these groups.
+  - Create a project and assign project administration privileges to the project.
+  - As a project administrator, assign read and write privileges to different groups of users
+
+## **3.5.** Lab: Configuring Authentication and Authorization
+
+- In this lab, you will configure the HTPasswd identity provider, create groups, and assign roles to users and groups
+- You should be able to:-
+  - Create users and passwords for HTPasswd authentication.
+  - Configure the Identity Provider for HTPasswd authentication.
+  - Assign cluster administration rights to users.
+  - Remove the ability to create projects at the cluster level.
+  - Create groups and add users to groups.
+  - Manage user privileges in projects by granting privileges to groups. 

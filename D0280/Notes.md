@@ -40,7 +40,7 @@
 
     Red Hat Marketplace is a platform that allows access to certified software packaged as Kubernetes operators that can be deployed in an OpenShift cluster. The certified software includes automatic deployments and seamless upgrades for an integrated experience.
 
-## **1.3** Describing the Architecture of OpenShift
+## **1.3.** Describing the Architecture of OpenShift
 
 - The architecture of OpenShift is based on the declarative nature of Kubernetes. Declarative architectures allow for self-optimizing and self-healing systems that are easier to manage than imperative architectures.
 
@@ -150,4 +150,107 @@
 
 - An OpenShift node based on Red Hat Enterprise Linux CoreOS runs very few local services that would require direct access to a node to inspect their status. Most of the system services run as containers, the main exceptions are the CRI-O container engine and the Kubelet.
 
-- The oc get node, oc adm top, oc adm node-logs, and oc adm debug commands provide troubleshooting information about OpenShift nodes. 
+- The oc get node, oc adm top, oc adm node-logs, and oc adm debug commands provide troubleshooting information about OpenShift nodes.
+
+
+# **Chapter 3:** Configuring Authentication and Authorization
+
+## **3.1.** Configuring Identity Providers
+
+- There are several OpenShift resources related to authentication and authorization:-
+
+  - **User:** users are entities that interact with the API server. Assign permissions by adding roles to the user directly or to the groups of which the user is a member.
+  - **Identity:** The identity resource keeps a record of successful authentication attempts from a specific user and identity provider. Any data concerning the source of the authentication is stored on the identity. Only a single user resource is associated with an identity resource. 
+  - **Service Account:** In OpenShift, applications can communicate with the API independently when user credentials cannot be acquired. To preserve the integrity of a regular user's credentials, credentials are not shared and service accounts are used instead. Service accounts enable you to control API access without the need to borrow a regular user's credentials. 
+  - **Group:** Groups represent a specific set of users. Users are assigned to one or to multiple groups. Groups are leveraged when implementing authorization policies to assign permissions to multiple users at the same time. For example, if you want to allow twenty users access to objects within a project, then it is advantageous to use a group instead of granting access to each of the users individually. OpenShift Container Platform also provides system groups or virtual groups that are provisioned automatically by the cluster. 
+  - **Role:**      A role defines a set of permissions that enables a user to perform API operations over one or more resource types. You grant permissions to users, groups, and service accounts by assigning roles to them. 
+
+  User and identity resources are usually not created in advance. They are usually created automatically by OpenShift after a successful interactive log in using OAuth.
+
+- Authentication and authorization are the two security layers responsible for enabling user interaction with the cluster. When a user makes a request to the API, the API associates the user with the request. The authentication layer authenticates the user. Upon successful authentication, the authorization layer decides to either honor or reject the API request. The authorization layer uses role-based access control (RBAC) policies to determine user privileges.
+
+- The OpenShift API has two methods for authenticating requests:-
+
+  - OAuth Access Tokens
+  - X.509 Client Certificates 
+
+  If the request does not present an access token or certificate, then the authentication layer assigns it the **system:anonymous** virtual user, and the **system:unauthenticated** virtual group.
+
+- The OpenShift Container Platform provides the Authentication operator, which runs an OAuth server. The OAuth server provides OAuth access tokens to users when they attempt to authenticate to the API. An identity provider must be configured and available to the OAuth server. The OAuth server uses an identity provider to validate the identity of the requester. The server reconciles the user with the identity and creates the OAuth access token for the user. OpenShift automatically creates identity and user resources after a successful login.
+
+- OpenShift OAuth server can be configured to use many identity providers such as HTPasswd, Keystone, LDAP, GitHub or OpenID Connect etc. The OAuth custom resource must be updated with your desired identity provider. You can define multiple identity providers, of the same or different kinds, on the same OAuth custom resource.
+
+- Before you can configure an identity provider and manage users, you must access your OpenShift cluster as a cluster administrator. A newly-installed OpenShift cluster provides two ways to authenticate API requests with cluster administrator privileges:-
+
+  - Authenticate as the kubeadmin virtual user. Successful authentication grants an OAuth access token.
+  - Use the kubeconfig file, which embeds an X.509 client certificate that never expires.
+  
+  To create additional users and grant them different access levels, you must configure an identity provider and assign roles to your users.
+
+- The cluster-wide cluster-admin role grants cluster administration privileges to users and groups. This role enables the user to perform any action on any resources within the cluster. The following example assigns the cluster-admin role to the student user. 
+
+  ```bash
+  [user@demo ~]$ oc adm policy add-cluster-role-to-user cluster-admin student
+  ```
+
+## **3.3.** Defining and Applying Permissions Using RBAC
+
+- Role-based access control (RBAC) is a technique for managing access to resources in a computer system. In Red Hat OpenShift, RBAC determines if a user can perform certain actions within the cluster or project. There are two types of roles that can be used depending on the user's level of responsibility: cluster and local.
+
+- **Authorization Process:** Authorization is a separate step from authentication. The authorization process is managed by rules, roles, and bindings.
+
+  RBAC Object  | Description
+  -------------|------------
+  Rule  | Allowed actions for objects or groups of objects.
+  Role  | Sets of rules. Users and groups can be associated with multiple roles.
+  Binding  | Assignment of users or groups to a role.
+
+- **RBAC Scope:** RHOCP defines two groups of roles and bindings depending on the user's scope and responsibility: cluster roles and local roles. Cluster role bindings take precedence over local role bindings.
+
+    Role Level  | Description
+    -------------|------------
+    Cluster Role | Users or groups with this role level can manage the OpenShift cluster.
+    Local Role | Users or groups with this role level can only manage elements at a project level.
+
+- Cluster administrators can use the **oc adm policy** command to both add and remove cluster roles and namespace roles.
+
+- Project administrators can use the **oc policy** command to add and remove namespace roles. 
+
+- OpenShift ships with a set of default cluster roles that can be assigned locally or to the entire cluster. You can modify these roles for fine-grained access control to OpenShift resources, but additional steps are required that are outside the scope of this course.
+
+  Default roles  | Description
+  ---------------|------------
+  admin | Users with this role can manage all project resources, including granting access to other users to access the project. The admin role gives a user access to project resources such as quotas and limit ranges, and also the ability to create new applications.
+  basic-user | Users with this role have read access to the project.
+  cluster-admin | Users with this role have superuser access to the cluster   resources. These users can perform any action on the cluster, and have full   control of all projects.
+  cluster-status | Users with this role can get cluster status information.
+  edit  | Users with this role can create, change, and delete common   application resources from the project, such as services and deployment   configurations. These users cannot act on management resources such as limit   ranges and quotas, and cannot manage access permissions to the project. he edit role gives a user sufficient access to act as a developer inside the project, but working under the constraints configured by a project administrator. 
+  self-provisioner | Users with this role can create new projects. This is a   cluster role, not a project role.
+  view | Users with this role can view project resources, but cannot modify   project resources. 
+  
+
+- Interaction with OpenShift Container Platform is associated with a user. An OpenShift Container Platform user object represents a user who can be granted permissions in the system by adding roles to that user or to a user's group via rolebindings. User Types are:-
+
+  - **Regular Users:** This is the way most interactive OpenShift Container Platform users are represented. Regular users are represented with the User object. This type of user represents a person that has been allowed access to the platform. Examples of regular users include user1 and user2. 
+  - **System Users:** Many of these are created automatically when the infrastructure is defined, mainly for the purpose of enabling the infrastructure to securely interact with the API. System users include a cluster administrator (with access to everything), a per-node user, users for routers and registries to use, and various others. An anonymous system user is used by default for unauthenticated requests. Examples of system users include: system:admin, system:openshift-registry, and system:node:node1.example.com. 
+  - **Regular Users:** These are special system users associated with projects; some are created automatically when the project is first created, and project administrators can create more for the purpose of defining access to the contents of each project. Service accounts are often used to give extra privileges to pods or deployment configurations. Service accounts are represented with the ServiceAccount object. Examples of service account users include system:serviceaccount:default:deployer and system:serviceaccount:foo:builder. 
+
+  Every user must authenticate before they can access OpenShift Container Platform. API requests with no authentication or invalid authentication are authenticated as requests by the anonymous system user. After successful authentication, policy determines what the user is authorized to do.
+
+  ## **3.6.** Summary
+
+ - A newly-installed OpenShift cluster provides two authentication methods that grant administrative access: the kubeconfig file and the kubeadmin virtual user.
+
+- The HTPasswd identity provider authenticates users against credentials stored in a secret. The name of the secret, and other settings for the identity provider, are stored inside the OAuth custom resource.
+
+- To manage user credentials using the HTPasswd identity provider, you must extract data from the secret, change that data using the htpasswd command, and then apply the data back to the secret.
+
+- Creating OpenShift users requires valid credentials, managed by an identity provider, plus user and identity resources.
+
+- Deleting OpenShift users requires deleting their credentials from the identity provider, and also deleting their user and identity resources.
+
+- OpenShift uses role-based access control (RBAC) to control user actions. A role is a collection of rules that govern interaction with OpenShift resources. Default roles exist for cluster administrators, developers, and auditors.
+
+- To control user interaction, assign a user to one or more roles. A role binding contains all of the associations of a role to users and groups.
+
+- To grant a user cluster administrator privileges, assign the cluster-admin role to that user. 
