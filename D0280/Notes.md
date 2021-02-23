@@ -36,9 +36,9 @@
 
     RHOCP embeds a number of storage providers that allow for automatic provisioning of storage on popular cloud providers and virtualization platforms, and so cluster administrators do not need to manage the fine details of proprietary storage arrays.
 
-- Red Hat, in collaboration with AWS, Google Cloud, and Microsoft, launched the **OperatorHub**, accessible at <https://operatorhub.io>. The platform is a public repository and marketplace for operators compatible with OpenShift and other distributions of Kubernetes that include the OLM.
+- **OperatorHub:** Red Hat, in collaboration with AWS, Google Cloud, and Microsoft, launched the OperatorHub, accessible at <https://operatorhub.io>. The platform is a public repository and marketplace for operators compatible with OpenShift and other distributions of Kubernetes that include the OLM.
 
-    **Red Hat Marketplace** is a platform that allows access to certified software packaged as Kubernetes operators that can be deployed in an OpenShift cluster. The certified software includes automatic deployments and seamless upgrades for an integrated experience.
+- **Red Hat Marketplace** is a platform that allows access to a curated set of certified softwares packaged as Kubernetes operators that can be deployed on an OpenShift or a Kubernetes cluster. The certified software includes automatic deployments and seamless upgrades for an integrated experience Operators available in the Red Hat Marketplace have gone through a certification process to ensure the software follows best practices and also the containers are scanned for vulnerabilities.
 
 ## **1.3.** Describing the Architecture of OpenShift
 
@@ -58,6 +58,10 @@
 
 ## **1.5.** Describing Cluster Operators
 
+- A Kubernetes application is an app that is both deployed on Kubernetes and managed using the Kubernetes APIs and kubectl or oc tooling.
+  
+- Operators are a method of packaging, deploying, and managing a kubernetes application. They act like an extension of the software vendor’s engineering team, watching over an OpenShift Container Platform environment and using its current state to make decisions in real time. Operators are designed to handle upgrades seamlessly, react to failures automatically, and not take shortcuts, such as skipping a software backup process to save time.
+  
 - Kubernetes operators are applications that invoke the Kubernetes API directly to manage Kubernetes resources. operators, unlike common applications, require direct access to the Kubernetes resources, they usually require custom security settings.
 
     Operators usually define custom resources (CR) that store their settings and configurations. An OpenShift administrator manages an operator by editing its custom resources. The syntax of a custom resource is defined by a custom resource definition (CRD).
@@ -66,19 +70,24 @@
 
 - You can develop operators using your preferred programming language. Technically you do not need a special-purpose SDK to develop an operator. All you need is the ability to invoke REST APIs and consume secrets that contain access credentials to the Kubernetes APIs.
 
-- The Operator Framework is an open source toolkit for building, testing, and packaging operators. The Operator Framework makes these tasks easier than coding directly to low-level Kubernetes APIs by providing the following components:-
+- The Operator Framework is a family of tools and capabilities to deliver on the customer experience described above. It is not just about writing code; testing, delivering, and updating Operators is just as important. The Operator Framework components consist of open source tools to tackle these problems. The Operator Framework makes these tasks easier than coding directly to low-level Kubernetes APIs by providing the following components:-
 
-  - **Operator Software Development Kit (Operator SDK):** Provides a set of Golang libraries and source code examples that implement common patterns in operator applications. It also provides a container image and playbook examples that allow you to develop operators using Ansible. 
+  - **Operator Software Development Kit (Operator SDK):** Provides a set of Golang libraries and source code examples that implement common patterns in operator applications. It also provides a container image and playbook examples that allow you to develop operators using Ansible. The Operator SDK assists Operator authors in bootstrapping, building, testing, and packaging their own Operator based on their expertise without requiring knowledge of Kubernetes API complexities.
+  
   - **Operator Life Cycle Manager (OLM):** Provides an application that manages the deployment, resource utilization, updates, and deletion of operators that have been deployed through an operator catalog. The OLM itself is an operator that comes preinstalled with OpenShift. Hence, OLM can be said as "_An operator for the operators_".
 
     The Operator Framework also defines a set of recommended practices for implementing operators and CRDs and a standard way of packaging an operator manifest as a container image, that allows an operator to be distributed using an operator catalog. The most common form of an operator catalog is an image registry server.
 
     An operator container image that follows the Operator Framework standards contains all resource definitions required to deploy the operator application. This way the OLM can install an operator automatically. If an operator is not built and packaged by following the Operator Framework standards, the OLM will not be able to install nor manage that operator.
-- **Introducing OperatorHub:** OperatorHub provides a web interface to discover and publish operators that follow the Operator Framework standards. Both open source operators and commercial operators can be published to the Operator hub. Operator container images can be hosted at different image registries, for example quay.io.
 
-- **Red Hat Marketplace** is a platform that allows access to a curated set of certified softwares packaged as Kubernetes operators that can be deployed on an OpenShift or a Kubernetes cluster. The certified software includes automatic deployments and seamless upgrades for an integrated experience Operators available in the Red Hat Marketplace have gone through a certification process to ensure the software follows best practices and also the containers are scanned for vulnerabilities.
+  - **Operator Registry:** The Operator Registry stores cluster service versions (CSVs) and custom resource definitions (CRDs) for creation in a cluster and stores Operator metadata about packages and channels. It runs in a Kubernetes or OpenShift cluster to provide this Operator catalog data to OLM.
 
-- **Cluster operators** are regular operators except that they are not managed by the OLM. They are managed by the OpenShift Cluster Version Operator. OpenShift cluster operators provide OpenShift extension APIs and infrastructure services such as:-
+
+  - **OperatorHub:** OperatorHub is a web console for cluster administrators to discover and select Operators to install on their cluster, that follow the Operator Framework standards. It is deployed by default in OpenShift Container Platform. OperatorHub also provides a web interface to publish operators. Both open source operators and commercial operators can be published to the Operator hub. Operator container images can be hosted at different image registries, for example quay.io.
+
+  - **Operator Metering:** Operator Metering collects operational metrics about Operators on the cluster for Day 2 management and aggregating usage metrics.
+
+- **Cluster operators:** OpenShift Container Platform includes a default set of Operators called _Cluster Operators_, that are required for proper functioning of the cluster. These are regular operators except that they are not managed by the OLM. They are managed by the OpenShift Cluster Version Operator. OpenShift cluster operators provide OpenShift extension APIs and infrastructure services such as:-
 
   - The OAuth server, which authenticates access to the control plane and extensions APIs.
   - The core DNS server, which manages service discovery inside the cluster.
@@ -86,11 +95,7 @@
   - The internal image registry, which allow developers to host container images inside the cluster, using either S2I or another mechanism.
   - The monitoring stack, which generates metrics and alerts about the cluster health.
 
-  **Extra Notes:**  
-  - Operators are a method of packaging, deploying, and managing an OpenShift Container Platform application. They act like an extension of the software vendor’s engineering team, watching over an OpenShift Container Platform environment and using its current state to make decisions in real time. Operators are designed to handle upgrades seamlessly, react to failures automatically, and not take shortcuts, such as skipping a software backup process to save time.
-
-  - OpenShift Container Platform 4.5 includes a default set of Operators that are required for proper functioning of the cluster. These default Operators are managed by the Cluster Version Operator (CVO).
-
+  **Extra Notes:**
   - As a cluster administrator, you can install application Operators from the OperatorHub using the OpenShift Container Platform web console or the CLI. You can then subscribe the Operator to one or more namespaces to make it available for developers on your cluster. Application Operators are managed by Operator Lifecycle Manager (OLM).
 
   - Default OpenShift Container Platform cluster Operators are managed by the Cluster Version Operator (CVO) and they do not have a Subscription object. Application Operators are managed by Operator Lifecycle Manager (OLM) and they have a Subscription object.
