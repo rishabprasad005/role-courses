@@ -86,9 +86,7 @@
   - The internal image registry, which allow developers to host container images inside the cluster, using either S2I or another mechanism.
   - The monitoring stack, which generates metrics and alerts about the cluster health.
 
-  **Note:**  OpenShift Cluster Version Operator are sometimes called a first-level operator and all cluster operators are also called second-level operators.
-
-- Extra Notes:-
+  **Extra Notes:**  
   - Operators are a method of packaging, deploying, and managing an OpenShift Container Platform application. They act like an extension of the software vendor’s engineering team, watching over an OpenShift Container Platform environment and using its current state to make decisions in real time. Operators are designed to handle upgrades seamlessly, react to failures automatically, and not take shortcuts, such as skipping a software backup process to save time.
 
   - OpenShift Container Platform 4.5 includes a default set of Operators that are required for proper functioning of the cluster. These default Operators are managed by the Cluster Version Operator (CVO).
@@ -96,6 +94,8 @@
   - As a cluster administrator, you can install application Operators from the OperatorHub using the OpenShift Container Platform web console or the CLI. You can then subscribe the Operator to one or more namespaces to make it available for developers on your cluster. Application Operators are managed by Operator Lifecycle Manager (OLM).
 
   - Default OpenShift Container Platform cluster Operators are managed by the Cluster Version Operator (CVO) and they do not have a Subscription object. Application Operators are managed by Operator Lifecycle Manager (OLM) and they have a Subscription object.
+
+  - OpenShift Cluster Version Operator are sometimes called a first-level operator and all cluster operators are also called second-level operators.
 
 - **Operator Terminologies:-**  
   - **Operator:** An application that manages Kubernetes resources
