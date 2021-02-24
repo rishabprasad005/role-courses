@@ -125,3 +125,4 @@ For example, to add the user dev to the role basic-user in the wordpress project
               --from-literal key1=config1 \
               --from-literal key2=config2
     ```
+

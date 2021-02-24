@@ -195,3 +195,23 @@
 - You should be able to:-
   - Provide sensitive information to deployments using secrets.
   - Allow applications to run in a less restrictive environment using security context constraints.
+
+# **Chapter 5:** Configuring OpenShift Networking for Applications
+
+## **5.1.** Troubleshooting OpenShift Software-defined Networking
+
+- After completing this section, you should be able to troubleshoot OpenShift software-defined networking using the command-line interface
+- 
+
+# **Chapter 7:** Describing Cluster Updates
+
+## **7.1.** Introducing Cluster Updates
+
+- Introducing Cluster Updates
+- Upgrade Channels (Update Paths)
+  - Candidate Channel
+  - Fast Channel
+  - Stable Channel
+- Changing the Update Channel
+- Describing _Over The Air(OTA)_ Updates
+- Updating the Cluster

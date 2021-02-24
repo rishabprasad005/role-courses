@@ -387,3 +387,99 @@
 - Secret resources allow you to separate sensitive information from application pods. You expose secrets to an application pod either as environment variables or as ordinary files.
 
 - OpenShift uses security context constraints (SCCs) to define allowed pod interactions with system resources. By default, pods operate under the restricted context which limits access to node resources. 
+
+
+# **Chapter 5:** Configuring OpenShift Networking for Applications
+
+## **5.1.** Troubleshooting OpenShift Software-defined Networking
+
+- OpenShift implements a software-defined network (SDN) to manage the network infrastructure of the cluster and user applications. Software-defined networking is a networking model that allows you to manage network services through the abstraction of several networking layers. It decouples the software that handles the traffic, called the control plane, and the underlying mechanisms that route the traffic, called the data plane. Among the many features of SDN, open standards enable vendors to propose their solutions, centralized management, dynamic routing, and tenant isolation. 
+
+- To learn more about **control plane** and **data plane**, click [here](https://www.geeksforgeeks.org/difference-between-control-plane-and-data-plane/)
+
+- In OpenShift Container Platform, the SDN satisfies the following five requirements:-
+  - Managing the network traffic and network resources programmatically, so that the organization teams can decide how to expose their applications.
+
+  - Managing communication between containers that run in the same project.
+
+  -  Managing communication between pods, whether they belong to a same project or run in separate projects.
+
+  -  Managing network communication from a pod to a service.
+
+  -  Managing network communication from an external network to a service, or from containers to external networks. 
+
+
+> ###########################################
+> ###########################################
+
+# **Chapter 7:** Describing Cluster Updates
+
+## **7.1.** Introducing Cluster Updates
+
+- Red Hat OpenShift Container Platform 4 adds many new features by using Red Hat Enterprise Linux CoreOS. Red Hat released a new software distribution system that provides the best upgrade path to update your cluster and the underlying operating system. This new distribution system is one of the significant **benefits of OpenShift 4 architectural changes, enabling clusters to upgrade Over-the-Air (OTA).**
+
+- This software distribution system for OTA manages the controller manifests, cluster roles, and any other resources necessary to update a cluster to a particular version. This feature ensures that a cluster runs the latest available version seamlessly. OTA also enables a cluster to use new features as they become available, including the latest bug fixes and security patches. OTA substantially decreases downtime due to upgrades. Red Hat hosts and manages this service at https://cloud.redhat.com and hosts cluster images at https://quay.io.
+
+- OTA enables faster updates by allowing the skipping of intermediary versions. For example, you can update from 4.5.1 to 4.5.3, thus bypassing 4.5.2.
+
+- You use a single interface (https://cloud.redhat.com) to manage the life cycle of all your OpenShift clusters The service defines upgrade paths that correspond to cluster eligibility for certain updates.
+
+- Update paths belong to upgrade channels. A channel can be visualized as a representation of the upgrade path. The channel controls the frequency and stability of updates. The OTA policy engine represents channels as a series of pointers to particular versions within the upgrade path.
+
+- A channel name consists of three parts: the tier (release candidate, fast, and stable), the major version (4), and the minor version (.2). Example channel names include: stable-4.5, fast-4.5, and candidate-4.5. Each channel delivers patches for a given cluster version.
+
+- **Candidate Channel:** The candidate channel delivers updates for testing the feature acceptance for the next version of OpenShift Container Platform. The features are subject to further checks and are promoted to the fast or stable channels when they meet the quality standards.
+
+  You use this channel to have access to the latest features of the product as they get released. This channel is suited for development and pre-production environments. 
+
+- **Fast Channel:** The fast channel delivers updates as soon as they are available. This channel is best suited for QA environments. This channel is supported by Red Hat and can be applied to production environments.
+
+- **Stable Channel:**  The stable channel contains delayed updates, which means that it delivers only minor updates for a given cluster version. This channel is suited for production environments, as the releases in that channel are tested by Red Hat SREs and support services.
+
+  Red Hat support and site reliability engineering (SRE) teams monitor operational clusters with new fast updates. If operational clusters pass additional testing and validation, updates in the fast channel are enabled in the stable channel. If Red Hat observes operational issues from a fast channel update, then that update is skipped in the stable channel.
+
+- **NOTES:**  The stable and fast channels are classified as General Availability (GA), whereas the candidate channel (release candidate channel) is not supported by Red Hat.
+
+  To ensure the stability of the cluster and the proper level of support, you should only switch from a stable channel to a fast channel, and vice versa. Although it is possible to switch from a stable channel or fast channel to a candidate channel, it is not recommended. The candidate channel is best suited for testing feature acceptance and assisting in qualifying the next version of OpenShift Container Platform.
+
+- **EXAMPLE:** The following describes how these upgrade paths would apply to Red Hat OpenShift Container Platform version 4.5:-
+
+  - When using the stable-4.5 channel, you can upgrade your cluster from 4.5.0 to 4.5.1 or 4.5.2. If an issue is discovered in the 4.5.3 release, then you cannot upgrade to that version. When a patch becomes available in the 4.5.4 release, you can update your cluster to that version. T
+
+  - The fast-4.5 channel can deliver 4.5.1 and 4.5.2 updates but not 4.6.1. Administrators must specifically choose a different minor version channel, such as fast-4.6, in order to upgrade to a new release in a new minor version.
+
+  - The candidate-4.5 channel allows you to install the latest features of OpenShift. With this channel, you can upgrade to all z-stream releases, such as 4.5.1, 4.5.2, 4.5.3, and so on. You use this channel to have access to the latest features of the product as they get released.
+
+- **Changing the Update Channel:** You can change the update channel to stable-4.5, fast-4.5, or candidate-4.5 using the web console or the OpenShift CLI client.
+
+- **Describing OTA:** OTA follows a client-server approach. Red Hat hosts the cluster images and the update infrastructure. One feature of OTA is the generation of all possible update paths for your cluster. OTA gathers information about the cluster and your entitlement to determine the available upgrade paths. The web console sends a notification when a new update is available.
+
+- Red Hat hosts both the cluster images and a "watcher", which automatically detects new images that are pushed to Quay. The Cluster Version Operator (CVO) receives its update status from that watcher. The CVO starts by updating the cluster components via their operators, and then updates any extra components that the Operator Lifecycle Manager (OLM) manages.
+
+- Telemetry allows Red Hat to determine the update path(upgrade channels). The cluster uses Prometheus-based telemetry to report on the state of each cluster operator. The data is anonymized and sent back to Red Hat servers that advise cluster administrators about potential new releases.
+
+- You can update the cluster via the web console, or from the command-line. Updating via the web console is easier than using the command-line. The **Administration → Cluster** Settings page displays an Update Status of Update available when a new update is available. From this page, click **Update now** to begin the process.
+  
+- **Points To Remember**
+  - Be sure to update all operators installed through the Operator Lifecycle Manager (OLM) to the latest version before updating the OpenShift cluster.
+
+  - The CVO starts by updating the cluster components via their operators, and then updates any extra components that the Operator Lifecycle Manager (OLM) manages.
+
+  - The CVO orchestrates updating the cluster and The OLM orchestrates updates to any operators running in the cluster.
+  
+  - Red Hat does not support reverting your cluster to a previous version, or rollback. Red Hat only supports upgrading to a newer version
+
+  - If an upgrade fails, the operator stops and reports the status of the failing component. Rolling your cluster back to a previous version is not supported. If your upgrade fails, contact Red Hat support.
+
+## **7.3.** Summary
+
+- One of the major benefits of OpenShift 4 architectural changes is that you can update your clusters Over-the-Air (OTA).
+
+- Red Hat provides a new software distribution system that ensures the best path for updating your cluster and the underlying operating system.
+
+- There are three distribution channels:-
+  - The stable channel delivers delayed updates.
+  - The fast channel delivers updates are soon as they are available.
+  - The candidate channel delivers updates for testing feature acceptance in the next version of OpenShift Container Platform. 
+
+- Red Hat does not support reverting your cluster to a previous version. Red Hat only supports upgrading to a newer version. 
