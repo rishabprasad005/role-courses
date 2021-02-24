@@ -88,3 +88,40 @@ For example, to add the user dev to the role basic-user in the wordpress project
 ```bash
 [user@demo ~]$ oc policy add-role-to-user basic-user dev -n wordpress
 ```
+
+
+# Creating a secret
+
+1. Create a generic secret containing key-value pairs from literal values typed on the command line:
+
+    ```bash
+    oc create secret generic secret_name \
+             --from-literal key1=secret1 \
+             --from-literal key2=secret2
+    ```
+
+2. Create a generic secret using key names specified on the command line and values from files:
+
+    ```bash
+    oc create secret generic ssh-keys \
+              --from-file id_rsa=/path-to/id_rsa \
+              --from-file id_rsa.pub=/path-to/id_rsa.pub
+    ```
+
+3. Create a TLS secret specifying a certificate and the associated key:
+
+    ```bash
+    oc create secret tls secret-tls \
+              --cert /path-to-certificate \
+              --key /path-to-key
+    ```
+
+# Creating a ConfigMap
+
+1. The syntax for creating a configuration map closely matches the syntax for creating a secret. Key-value pairs can be entered on the command line or the content of a file can be used as the value of a specified key:
+
+    ```bash
+    oc create configmap my-config \
+              --from-literal key1=config1 \
+              --from-literal key2=config2
+    ```

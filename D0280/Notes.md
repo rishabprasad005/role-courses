@@ -109,7 +109,7 @@
   - **Operator SDK:** An open source toolkit for building, testing, and packaging operators
   - **Custom Resource Definition (CRD):** An extension of the Kubernetes API that defines the syntax of a custom resource
   - **OperatorHub:** A public web service where you can publish operators that are compatible with the OLM
-  - **Operator Catalogue:** A repository for discovering and installing operators
+  - **Operator Catalogue:** A repository for discovering and installing operators (OperatorHub is an operator catalogue, which only contains operators that are compatible with the OLM)
   - **Red Hat Marketplace:** Platform that allows access to certified software packaged as Kubernetes operators that can be deployed in an OpenShift cluster
 
 ## 1.7. Summary:-
@@ -267,4 +267,123 @@
 
 - To control user interaction, assign a user to one or more roles. A role binding contains all of the associations of a role to users and groups.
 
-- To grant a user cluster administrator privileges, assign the cluster-admin role to that user. 
+- To grant a user cluster administrator privileges, assign the cluster-admin role to that user.
+
+
+# **Chapter 4:** Configuring Application Security
+
+## **4.1.** Managing Sensitive Information with Secrets
+
+- Modern applications are designed to loosely couple code, configuration, and data. Configuration files and data are not hard-coded as part of the software. Instead, the software loads configuration and data from an external source. This enables deploying an application to different environments without requiring a change to the application source code.
+
+- A secret can store any type of data. Data in a secret is Base64-encoded, not stored in plain text. Secret data is not encrypted; you can decode the secret from Base64 format to access the original data.
+
+- Although secrets can store any type of data, Kubernetes and OpenShift support different types of secrets. Different types of secret resources exist, including service account tokens, SSH keys, and TLS certificates. When you store information in a specific secret resource type, Kubernetes validates that the data conforms to the type of secret.
+
+- **NOTE**: You can encrypt the Etcd database, although this is not the default setting. When enabled, Etcd encrypts the following resources: secrets, configuration maps, routes, OAuth access tokens, and OAuth authorize tokens. Enabling Etcd encryption is outside the scope of this class.
+
+- Secrets can be exposed to pods in two ways:-
+  - Secrets as Pod Environment Variables
+  - Secrets as Files in a Pod
+
+- A secret can be mounted to a directory within a pod. A file is created for each key in the secret using the name of the key. The content of each file is the decoded value of the secret.
+
+- The container image can dictate the location of the mount point and the expected file names. For example, a container image running NGINX can specify the SSL certificate location and the SSL certificate key location in the /etc/nginx/nginx.conf configuration file. If the expected files are not found, then the container might fail to run.
+  
+- If the mount point already exists in the pod, then any existing files at the mount point are obscured by the mounted secret. The existing files are not visible and are not accessible. 
+
+- The main features of secrets include:-
+  
+  - Secret data can be shared within a project namespace.
+
+  - Secret data is referenced independently of secret definition. Administrators can create and manage a secret resource that other team members can reference in their deployment configurations.
+
+  - Secret data is injected into pods when OpenShift creates a pod. You can expose a secret as an environment variable or as a mounted file in the pod.
+
+  - If the value of a secret changes during pod execution, the secret data in the pod does not update. After a secret value changes, you must create new pods to inject the new secret data.
+
+  - Any secret data that OpenShift injects into a pod is ephemeral. If OpenShift exposes sensitive data to a pod as environment variables, then those variables are destroyed when the pod is destroyed.
+
+  - Secret data volumes are backed by temporary file storage. If a secret is mounted as a file in the pod, then the file is also destroyed when the pod is destroyed. A stopped pod does not contain secret data.
+
+  - If a pod requires access to sensitive information, then create a secret for the information before you deploy the pod. 
+
+- Two primary use cases for secrets are storing credentials and securing communication between services. 
+  - **Credentials:**  Store sensitive information, such as passwords and user names, in a secret.
+
+    If an application expects to read sensitive information from a file, then you mount the secret as a data volume to the pod. The application can read the secret as an ordinary file to access the sensitive information. Some databases, for example, read credentials from a file to authenticate users.
+
+    Some applications use environment variables to read configuration and sensitive data. You can link secret variables to pod environment variables in a deployment configuration.
+
+  - **Transport Layer Security (TLS) and Key Pairs:** Use a TLS certificate and key to secure communication to a pod. A TLS secret stores the certificate as _tls.crt_ and the certificate key as _tls.key_. Developers can mount the secret as a volume and create a pass through route to the application.
+
+## **4.3.** Controlling Application Permissions with Security Context Constraints
+
+- **Security Context Constraints (SCCs):** Red Hat OpenShift provides security context constraints (SCCs), a security mechanism that restricts access to resources, but not to operations in OpenShift. 
+
+- SCCs limits the access: From a running pod in OpenShift To the host environment. SCCs controls:-
+  - Running privileged containers.
+  - Requesting extra capabilities for a container
+  - Using host directories as volumes.
+  - Changing the SELinux context of a container.
+  - Changing the user ID.
+
+- You can run the `oc get scc` command as a cluster administrator to list the SCCs defined by OpenShift. OpenShift provides eight SCCs:-
+  - anyuid
+  - hostaccess
+  - hostmount-anyuid
+  - hostnetwork
+  - node-exporter
+  - nonroot
+  - privileged
+  - restricted
+  
+  **Note:** To get additional information about an SCC, use the oc describe command. For example:-
+
+  ```bash
+  oc describe scc anyuid
+  ```
+
+- Most pods created by OpenShift use the SCC named restricted, which provides limited access to resources external to OpenShift. Use the oc describe command to view the security context constraint that a pod uses. For example:-
+
+  ```bash
+  oc describe pod <pod-name> \
+             -n openshift-console | grep scc
+  ```
+
+- **Privileged Containers:** Some containers developed by the community might require relaxed security context constraints to access resources that are forbidden by default, such as file systems, runtime environment of the host, sockets, or to access a SELinux context. For example, the S2I builder containers are a class of privileged containers that require access beyond the limits of their own containers. These containers can pose security risks because they can use any resources on an OpenShift node. Use SCCs to enable access for privileged containers by creating service accounts with privileged access.
+
+- Container images downloaded from public container registries, such as Docker Hub, might fail to run using the restricted SCC. For example, a container image that requires running as a specific user ID can fail because the restricted SCC runs the container using a random user ID. A container image that listens on port 80 or port 443 can fail for a related reason. The random user ID used by the restricted SCC cannot start a service that listens on a privileged network port (port numbers less than 1024). Use the scc-subject-review subcommand to list all the security context constraints that can overcome the limitations of a container.
+
+  ```bash
+  oc get pod podname -o yaml | oc adm policy scc-subject-review -f -
+  ```
+
+- For the _anyuid_ SCC, the run as user strategy is defined as _RunAsAny_, which means that the pod can run as any user ID available in the container. This strategy allows containers that require a specific user to run the commands using a specific user ID.
+
+- To change the container to run using a different SCC, you must create a service account bound to a pod. Use the `oc create serviceaccount` command to create the service account, and use the `-n` option if the service account must be created in a namespace different than the current one.
+
+  ```bash
+  oc create serviceaccount service-account-name
+  ```
+
+  To associate the service account with an SCC, use the `oc adm policy` command. Use the `-z` option to identify a service account, and use the `-n` option if the service account exists in a namespace different than the current one.
+
+  ```bash
+  oc adm policy add-scc-to-user <scc-name> -z service-account
+  ```
+
+  **NOTE:** Assigning an SCC to a service account or removing an SCC from a service account must be performed by a cluster administrator. Allowing pods to run with a less restrictive SCC can make your cluster less secure. Use with caution.
+
+- Modify an existing deployment or deployment configuration to use the service account using the oc set serviceaccount command. If the command succeeds, then the pods associated with the deployment or deployment configuration redeploy.
+
+  ```bash
+  oc set serviceaccount deployment/deployment-name service-account-name
+  ```
+
+
+## **4.6.** Summary
+
+- Secret resources allow you to separate sensitive information from application pods. You expose secrets to an application pod either as environment variables or as ordinary files.
+
+- OpenShift uses security context constraints (SCCs) to define allowed pod interactions with system resources. By default, pods operate under the restricted context which limits access to node resources. 

@@ -122,7 +122,7 @@
   - System Users
   - Service Acounts
 
-## **3.4.** Guided Exercise: Defining and Applying Permissions using RBAC
+## **3.4.** Guided Exercise: Defining and Applying Permissions using RBAC [IMPORTANT]
 
 - In this exercise, you will define role-based access controls and apply permissions to users
 - You should be able to:-
@@ -140,4 +140,58 @@
   - Assign cluster administration rights to users.
   - Remove the ability to create projects at the cluster level.
   - Create groups and add users to groups.
-  - Manage user privileges in projects by granting privileges to groups. 
+  - Manage user privileges in projects by granting privileges to groups.
+
+
+# **Chapter 4:** Configuring Application Security [IMPORTANT]
+
+## **4.1.** Managing Sensitive Information with Secrets
+
+- After completing this section, you should be able to:-
+  - Create and apply secrets to manage sensitive information.
+  - Share secrets between applications
+- Features and Use case of secrets
+- Creating a Secret (oc create secret):-
+  - Create a generic secret containing key-value pairs from literal values typed on the command line
+  - Create a generic secret using key names specified on the command line and values from files
+  - Create a TLS secret specifying a certificate and the associated key
+- Exposing Secrets to Pods
+  - Secrets as Pod Environment Variables
+  - Secrets as Files in a Pod
+- Configuration Map Overview (oc create configmap)
+- Updating Existing Secrets and Configuration Maps
+  - oc extract
+  - oc set data
+
+## **4.2.** Guided Exercise: Managing Sensitive Information With Secrets
+
+- In this exercise, you will manage information using secrets
+- You should be able to:-
+  - Manage secrets and use them to initialize environment variables in applications.
+  - Use secrets for a MySQL database application.
+  - Assign secrets to an application that connects to a MySQL database.
+
+## **4.3.** Controlling Application Permissions with Security Context Constraints
+
+- After completing this section, you should be able to:-
+  - Create service accounts and apply permissions
+  - Manage security context constraints
+- Security Context Constraints (SCCs)
+  - Available SCCs in OpenShift
+  - Change the container to run using a different SCC
+- Privileged Containers
+
+## **4.4.** Guided Exercise: Controlling Application Permissions with Security Context Constraints
+
+- In this exercise, you will deploy `gitlab server` that require pods with extended permissions.
+- You should be able to:-
+  - Create service accounts and assign security context constraints (SCCs) to them.
+  - Assign a service account to a deployment configuration.
+  - Run applications that need root privileges.
+
+## **4.5.** Lab: Configuring Application Security
+
+- In this lab, you will create a secret to share sensitive configuration information and modify a deployment so that it runs with less restrictive settings.
+- You should be able to:-
+  - Provide sensitive information to deployments using secrets.
+  - Allow applications to run in a less restrictive environment using security context constraints.
