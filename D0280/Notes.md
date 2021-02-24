@@ -238,22 +238,22 @@
   basic-user | Users with this role have read access to the project.
   cluster-admin | Users with this role have superuser access to the cluster   resources. These users can perform any action on the cluster, and have full   control of all projects.
   cluster-status | Users with this role can get cluster status information.
-  edit  | Users with this role can create, change, and delete common   application resources from the project, such as services and deployment   configurations. These users cannot act on management resources such as limit   ranges and quotas, and cannot manage access permissions to the project. he edit role gives a user sufficient access to act as a developer inside the project, but working under the constraints configured by a project administrator. 
+  edit  | Users with this role can create, change, and delete common   application resources from the project, such as services and deployment   configurations. These users cannot act on management resources such as limit   ranges and quotas, and cannot manage access permissions to the project. he edit role gives a user sufficient access to act as a developer inside the project, but working under the constraints configured by a project administrator.
   self-provisioner | Users with this role can create new projects. This is a   cluster role, not a project role.
-  view | Users with this role can view project resources, but cannot modify   project resources. 
+  view | Users with this role can view project resources, but cannot modify   project resources.
   
 
 - Interaction with OpenShift Container Platform is associated with a user. An OpenShift Container Platform user object represents a user who can be granted permissions in the system by adding roles to that user or to a user's group via rolebindings. User Types are:-
 
   - **Regular Users:** This is the way most interactive OpenShift Container Platform users are represented. Regular users are represented with the User object. This type of user represents a person that has been allowed access to the platform. Examples of regular users include user1 and user2. 
   - **System Users:** Many of these are created automatically when the infrastructure is defined, mainly for the purpose of enabling the infrastructure to securely interact with the API. System users include a cluster administrator (with access to everything), a per-node user, users for routers and registries to use, and various others. An anonymous system user is used by default for unauthenticated requests. Examples of system users include: system:admin, system:openshift-registry, and system:node:node1.example.com. 
-  - **Regular Users:** These are special system users associated with projects; some are created automatically when the project is first created, and project administrators can create more for the purpose of defining access to the contents of each project. Service accounts are often used to give extra privileges to pods or deployment configurations. Service accounts are represented with the ServiceAccount object. Examples of service account users include system:serviceaccount:default:deployer and system:serviceaccount:foo:builder. 
+  - **Regular Users:** These are special system users associated with projects; some are created automatically when the project is first created, and project administrators can create more for the purpose of defining access to the contents of each project. Service accounts are often used to give extra privileges to pods or deployment configurations. Service accounts are represented with the ServiceAccount object. Examples of service account users include system:serviceaccount:default:deployer and system:serviceaccount:foo:builder.
 
   Every user must authenticate before they can access OpenShift Container Platform. API requests with no authentication or invalid authentication are authenticated as requests by the anonymous system user. After successful authentication, policy determines what the user is authorized to do.
 
-  ## **3.6.** Summary
+## **3.6.** Summary
 
- - A newly-installed OpenShift cluster provides two authentication methods that grant administrative access: the kubeconfig file and the kubeadmin virtual user.
+- A newly-installed OpenShift cluster provides two authentication methods that grant administrative access: the kubeconfig file and the kubeadmin virtual user.
 
 - The HTPasswd identity provider authenticates users against credentials stored in a secret. The name of the secret, and other settings for the identity provider, are stored inside the OAuth custom resource.
 

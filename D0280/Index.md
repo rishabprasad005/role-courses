@@ -215,3 +215,70 @@
 - Changing the Update Channel
 - Describing _Over The Air(OTA)_ Updates
 - Updating the Cluster
+
+# **Chapter 8:** Managing a Cluster with the Web Console [IMPORTANT]
+
+## **8.1.** Performing Cluster Administration
+
+- Describing the Web Console Components and options
+  - Home
+  - Operators
+  - Workloads, Networking and Storage
+  - Builds
+  - Monitoring
+  - Compute
+  - User Managemnt
+  - Administration
+- Accessing the OpenShift Web Console
+- Creating Users and Groups
+- Creating a Project
+- Limitations of Web Console
+
+## **8.2.** Guided Exercise: Performing Cluster Administration
+
+- In this exercise, you will perform cluster administration with the web console
+- You should be able to use the OpenShift web console to:-
+  - Find resources associated with an operator.
+  - Review a pod's status, YAML definition, and logs.
+  - View and edit cluster configuration resources.
+  - Create a new project and configure its resource quotas, limit ranges, and role-based access control (RBAC). 
+
+## **8.3.** Managing Workloads and Operators
+
+- After completing this section, you should be able to manage applications and Kubernetes Operators with the web console
+- Exploring Workload Resources
+- Managing Workloads
+- Deploying Applications
+- Installing and Using Operators
+
+## **8.4.** Guided Exercise: Managing Workloads and Operators
+
+- In this exercise, you will manage cluster workloads with the web console.
+- You should be able to use the OpenShift web console to:-
+  - Install an operator from OperatorHub
+  - Use a custom resource to create a database.
+  - Deploy and troubleshoot an application that uses the operator-managed resources.
+
+## **8.5.** Examining Cluster Metrics
+
+- After completing this section, you should be able to examine performance and health metrics for cluster nodes and applications
+- Viewing Cluster Metrics
+- Viewing Resource Metrics
+- Performing Prometheus Queries in the Web Console
+
+## **8.6.** Guided Exercise: Examining Cluster Metrics
+
+- In this exercise, you will examine the metrics page and dashboard within the web console
+- You should be able to use the Red Hat OpenShift web console to:-
+  - View cluster, project, pod, and node metrics.
+  - Identify a pod consuming large amounts of memory or CPU.
+
+## **8.7.** Lab: Managing a Cluster with the Web Console
+
+- In this lab, you will manage the OpenShift cluster using the web console.
+- You should be able to use the OpenShift web console to:-
+  - Modify a secret to add htpasswd entries for new users.
+  - Configure a new project with role-based access controls and resource quotas.
+  - Use an OperatorHub operator to deploy a database.
+  - Create a deployment, service, and route for a web application.
+  - Troubleshoot an application using events and logs.

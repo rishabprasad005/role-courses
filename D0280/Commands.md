@@ -126,3 +126,11 @@ For example, to add the user dev to the role basic-user in the wordpress project
               --from-literal key2=config2
     ```
 
+# Extras
+
+1. To view the URL for web console
+   
+   ```
+   oc whoami --show-console
+   ```
+
