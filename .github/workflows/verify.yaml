@@ -1,0 +1,16 @@
+name: Test Workflow
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: {}    
+
+jobs:
+  build-verify:
+    name: Verify Build
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout Code with Ref '${{ github.ref }}' 
+        uses: actions/checkout@v2
+
+      - name: Print Message
+        run: echo "Test Successfull"

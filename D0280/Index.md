@@ -122,7 +122,7 @@
   - System Users
   - Service Acounts
 
-## **3.4.** Guided Exercise: Defining and Applying Permissions using RBAC [IMPORTANT]
+## **3.4.** Guided Exercise: Defining and Applying Permissions using RBAC **[IMPORTANT]**
 
 - In this exercise, you will define role-based access controls and apply permissions to users
 - You should be able to:-
@@ -143,7 +143,7 @@
   - Manage user privileges in projects by granting privileges to groups.
 
 
-# **Chapter 4:** Configuring Application Security [IMPORTANT]
+# **Chapter 4:** Configuring Application Security **[IMPORTANT]**
 
 ## **4.1.** Managing Sensitive Information with Secrets
 
@@ -196,12 +196,151 @@
   - Provide sensitive information to deployments using secrets.
   - Allow applications to run in a less restrictive environment using security context constraints.
 
-# **Chapter 5:** Configuring OpenShift Networking for Applications
+# **Chapter 5:** Configuring OpenShift Networking for Applications **[IMPORTANT]**
 
 ## **5.1.** Troubleshooting OpenShift Software-defined Networking
 
 - After completing this section, you should be able to troubleshoot OpenShift software-defined networking using the command-line interface
-- 
+- Introducing OpenShift Software-defined Networking
+  - Discussing OpenShift Networking Model
+  - Migrating Legacy Applications
+- Service Resource
+  - How to Create Service Resource
+  - Using Services for Accessing Pods
+- Discussing the DNS Operator
+  - Introducing DNS operator
+  - Responsibilities of DNS Operator
+  - Managing DNS Records for Services
+- Introducing the Cluster Network Operator
+- Introducing Multus CNI
+
+## **5.2.** Guided Exercise: Troubleshooting OpenShift Software-defined Networking 
+
+- As an OpenShift developer, you just completed the migration of a To Do Node.js application to OpenShift. The application is comprised of two deployments, one for the database, and one for the front end. It also contains two services for communication between pods. Although the application seems to initialize, you cannot access it via a web browser. In this activity, you will troubleshoot your application and correct the issue. 
+
+- In this exercise, you will diagnose and fix connectivity issues with a Kubernetes-style application deployment.You should be able to:-
+  - Deploy the To Do Node.js application.
+  - Create a route to expose an application service.
+  - Troubleshoot communication between pods in your application using oc debug.
+  - Update an OpenShift service.
+
+## **5.3.** Exposing Applications for External Access
+
+- After completing this section, you should be able to allow and protect network connections to applications inside an OpenShift cluster
+- Accessing Application from External Networks
+- Describing Methods for Managing Ingress Traffic
+  - Route
+  - Ingress
+  - External load balancer
+  - Service external IP
+  - NodePort
+- Route vs Ingress
+- Creating Routes
+  - via command line (oc expose)
+  - via definition file
+- Securing Routes
+- OpenShift Secure Routes
+  - Edge
+  - Passthrough
+  - Re-encryption
+- Securing Applications with Edge Routes
+- Securing Applications with Passthrough Routes
+
+## **5.4.** Guided Exercise: Exposing Applications for External Access
+
+- As an application developer, you are ready to deploy your application in OpenShift. In this activity, you will deploy two versions of the application, one that is exposed over unencrypted traffic (HTTP), and one that is exposed over secure traffic.
+- In this exercise, you will expose an application secured by TLS certificates. You should be able to:-
+  - Deploy an application and create an unencrypted route for it.
+  - Create an OpenShift edge route with encryption.
+  - Update an OpenShift deployment to support a new version of the application.
+  - Create an OpenShift TLS secret and mount it to your application i.e. Passthrough Route
+  - Verify that the communication to the application is encrypted.
+
+## **5.5.** Configuring Network Policies
+
+- After completing this section, you should be able to restrict network traffic between projects and pods
+- Managing Network Policies in OpenShift
+- How to create network policies
+- Example use-cases for network policies
+
+## **5.6.** Guided Exercise: Configuring Network Policies
+
+- In this exercise, you will create network policies and review pod isolation created by these network policies. You will be able to:-
+  - Create network policies to control communication between pods.
+  - Verify ingress traffic is limited to pods.
+
+## **5.7.** Lab: Configuring OpenShift Networking for Applications
+
+- In this review, you deploy a PHP application that prints some information about the system. The application is available with two different configurations: one that runs with an unencrypted network that listens on port 8080, and one that uses a TLS certificate to encrypt the network traffic, which listens on port 8443.
+- In this lab, you will configure a TLS passthrough route for your application. You should be able to:-
+  - Deploy an application and configure an insecure route.
+  - Restrict traffic to the applications.
+  - Generate a TLS certificate for an application.
+  - Configure a passthrough route for an application with a TLS certificate.
+
+# **Chapter 6:** Controlling Pod Scheduling **[IMPORTANT]**
+
+## **6.1.** Controlling Pod Scheduling Behavior
+
+- After completing this section, you should be able to describe pod scheduling algorithms, the methods used to influence scheduling, and apply these methods.
+- Introducing the OpenShift Scheduler Algorithm
+- Scheduling and Topology
+- Labeling Nodes (oc label node command)
+- Labeling Machine Sets
+- Controlling Pod Placement
+- Configuring a Node Selector for a Project (oc adm new-project)
+- Scaling the Number of Pod Replicas
+
+## **6.2.** Guided Exercise: Controlling Pod Scheduling Behavior
+
+- In this exercise, you will configure an application to run on a subset of the cluster worker nodes. You should be able to use the OpenShift command-line interface to:-
+  - Add a new label to a node.
+  - Deploy pods to nodes that match a specified label.
+  - Remove a label from a node.
+  - Troubleshoot when pods fail to deploy to a node.
+
+## **6.3.** Limiting Resource Usage by an Application
+
+- After completing this section, you should be able to limit the resources consumed by containers, pods, and projects.
+- Defining Resource Requests and Limits for Pods (oc set resources)
+- Viewing Requests, Limits, and Actual Usage
+- Applying Quotas (oc create quota)
+- Applying Limit Ranges
+- Applying Quotas to Multiple Projects
+- Customizing the Default Project Template
+
+## **6.4.** Guided Exercise: Limiting Resource Usage by an Application
+
+- In this exercise, you will configure an application so that it does not consume all computing resources from the cluster and its worker nodes. You should be able to use the OpenShift command-line interface to:-
+  - Configure an application to specify resource requests for CPU and memory usage.
+  - Modify an application to work within existing cluster restrictions.
+  - Create a quota to limit the total amount of CPU, memory, and configuration maps available to a project.
+
+## **6.5.** Scaling an Application
+
+- After completing this section, students should be able to:-
+  - Control the number of replicas of a pod.
+  - Specify the number of replicas in a deployment or deployment configuration resource.
+  - Manually scale the number of replicas.
+  - Create a horizontal pod autoscaler (HPA) resource.
+- Specifying Pod Replicas in Configuration Workloads
+- Manually Scaling the Number of Pod Replicas (oc scale)
+- Autoscaling Pods (oc autoscale)
+
+## **6.6.** Guided Exercise: Scaling an Application
+
+- In this exercise, you will scale an application manually and automatically. You should be able to use the OpenShift command-line interface to:-
+  - Manually scale an application.
+  - Configure an application to automatically scale based on usage.
+
+## **6.7.** Lab: Controlling Pod Scheduling
+
+- In this lab, you will configure an application to run on a subset of the cluster nodes, and to scale with load. You should be able to use the OpenShift command-line interface to:-
+  - Add a new label to nodes.
+  - Deploy pods to nodes that match a specified label.
+  - Request CPU and memory resources for pods.
+  - Configure an application to scale automatically.
+  - Create a quota to limit the amount of resources a project can consume.
 
 # **Chapter 7:** Describing Cluster Updates
 
@@ -216,7 +355,7 @@
 - Describing _Over The Air(OTA)_ Updates
 - Updating the Cluster
 
-# **Chapter 8:** Managing a Cluster with the Web Console [IMPORTANT]
+# **Chapter 8:** Managing a Cluster with the Web Console **[IMPORTANT]**
 
 ## **8.1.** Performing Cluster Administration
 

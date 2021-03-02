@@ -393,7 +393,9 @@
 
 ## **5.1.** Troubleshooting OpenShift Software-defined Networking
 
-- OpenShift implements a software-defined network (SDN) to manage the network infrastructure of the cluster and user applications. Software-defined networking is a networking model that allows you to manage network services through the abstraction of several networking layers. It decouples the software that handles the traffic, called the control plane, and the underlying mechanisms that route the traffic, called the data plane. Among the many features of SDN, open standards enable vendors to propose their solutions, centralized management, dynamic routing, and tenant isolation. 
+- OpenShift implements a software-defined network (SDN) to manage the network infrastructure of the cluster and user applications. Software-defined networking is a networking model that allows you to manage network services through the abstraction of several networking layers. **It decouples the software that handles the traffic, called the control plane, and the underlying mechanisms that route the traffic, called the data plane**.
+  
+- Some of the features of SDN includes centralized management, dynamic routing, tenant isolation and most importantly 'open standards', which enable vendors to propose their solutions.
 
 - To learn more about **control plane** and **data plane**, click [here](https://www.geeksforgeeks.org/difference-between-control-plane-and-data-plane/)
 
@@ -402,15 +404,382 @@
 
   - Managing communication between containers that run in the same project.
 
-  -  Managing communication between pods, whether they belong to a same project or run in separate projects.
+  - Managing communication between pods, whether they belong to a same project or run in separate projects.
 
-  -  Managing network communication from a pod to a service.
+  - Managing network communication from a pod to a service.
 
-  -  Managing network communication from an external network to a service, or from containers to external networks. 
+  - Managing network communication from an external network to a service, or from containers to external networks.
 
+- Discussing OpenShift Networking Model:-
 
-> ###########################################
-> ###########################################
+  - The Container Network Interface (CNI) is a common interface between the network provider and the container execution and is implemented as network plug-ins. The CNI provides the specification for plug-ins to configure network interfaces inside containers. Plug-ins written to the specification allow different network providers to control the OpenShift cluster network.
+
+  - The SDN uses CNI plug-ins to create Linux namespaces to partition the usage of resources and processes on physical and virtual hosts. This implementation allows containers inside pods to share network resources, such as devices, IP stacks, firewall rules, and routing tables. The SDN allocates a unique routable IP to each pod so that you can access the pod from any other service in the same network.
+
+  - Some common CNI plug-ins used in OpenShift are OpenShift SDN, OVN-Kubernetes, and Kuryr. The OpenShift SDN network provider is currently the default network provider in OpenShift 4.5, but future OpenShift 4 releases will default to the OVN-Kubernetes network provider.
+
+  - The OpenShift SDN network provider uses Open vSwitch (OVS) to connect pods on the same node and Virtual Extensible LAN (VXLAN) tunneling to connect nodes. OVN-Kubernetes uses Open Virtual Network (OVN) to manage the cluster network. OVN extends OVS with virtual network abstractions. Kuryr provides networking through the Neutron and Octavia Red Hat OpenStack Platform services.
+
+- **Migrating Legacy Applications:** The SDN design makes it easy to containerize your legacy applications because you do not need to change the way the application components communicate with each other. If your application is comprised of many services that communicate over the TCP/UDP stack, this approach still works as containers in a pod share the same network stack.
+
+- Using Services for Accessing Pods:-
+  
+  - In an OpenShift cluster, pods are constantly created and destroyed across the nodes in the cluster, such as during the deployment of a new application version or when draining a node for maintenance. Pods are assigned a different IP address each time they are created; thus, pods are not easily addressable. Instead of having a pod discover the IP address of another pod, you can use services to provide a single, unique IP address for other pods to use, independent of where the pods are running.
+
+  - Services allow for the logical grouping of pods under a common access route. A service acts as a load balancer in front of one or more pods, thus decoupling the application specifications (such as the number running of replicas) from the access to the application. It load balances client requests across member pods, and provides a stable interface that enables communication with pods without tracking individual pod IP addresses.
+
+  - Services rely on selectors (labels) that indicate which pods receive the traffic through the service. Each pod matching these selectors is added to the service resource as an endpoint. As pods are created and killed, the service automatically updates the endpoints.
+  
+    Using selectors brings flexibility to the way you design the architecture and routing of your applications. For example, you can divide the application into tiers and decide to create a service for each tier. Selectors allow a design that is flexible and highly resilient.
+
+  - **OpenShift uses two subnets**: one subnet for pods, and one subnet for services. The traffic is forwarded in a transparent way to the pods; an agent (depending on the network mode that you use) manages routing rules to route traffic to the pods that match the selectors.
+
+- Discussing the DNS Operator:-
+  
+  - The DNS operator deploys and runs a DNS server managed by CoreDNS, a lightweight DNS server written in GoLang. The DNS operator provides DNS name resolution between pods, which enables services to discover their endpoints. Every time you create a new application, OpenShift configures the pods so that they contact the CoreDNS service IP for DNS resolution.
+
+  - The DNS operator is responsible for the following:-
+    - Creating a default cluster DNS name (cluster.local)
+    - Assigning DNS names to services that you define (for example, db.backend.svc.cluster.local)
+
+- Managing DNS Records for services:-
+
+  - This DNS implementation allows pods to seamlessly resolve DNS names for resources in a project or the cluster. Pods can use a predictable naming scheme for accessing a service.
+  
+  - For example, querying the db.backend.svc.cluster.local host name from a container returns the IP address of the service. In this example, db is the name of the service, backend is the project name, and cluster.local is the cluster DNS name.
+
+  - CoreDNS creates two kind of records for services: A records that resolve to services, and SRV records that match the following format:
+
+    ```bash
+    _port-name._port-protocol.svc-name.namespace.svc.cluster-domain.cluster-domain
+    ```
+
+    For example, if you use a service that exposes the TCP port 443 through the HTTPS service, the SRV record is created as follows:
+
+      ```bash
+      _443-tcp._tcp.https.frontend.svc.cluster.local
+      ```
+
+  - When services do not have a cluster IP, the DNS operator assigns them a DNS, a record that resolves to the set of IPs of the pods behind the service. Similarly, the newly created SRV record resolves to all the pods that are behind the service.
+
+- Introducing the Cluster Network Operator:-
+
+  - OpenShift Container Platform uses the Cluster Network Operator for managing the SDN. This includes the network CIDR to use, the network provider, and the IP address pools.
+
+  - Configuration of the Cluster Network Operator is done before installation, although it is possible to migrate from the OpenShift SDN default CNI network provider to the OVN-Kubernetes network provider.
+
+- Introducing Multus CNI:-
+
+  - Multus is an open source project to support multiple network cards in OpenShift. One of the challenges that Multus solves is the migration of network function virtualization to containers.
+  
+  - Multus acts as a broker and arbiter of other CNI plug-ins for managing the implementation and life cycle of supplementary network devices in containers. 
+  
+  - Multus supports plug-ins, such as SR-IOV, vHost CNI, Flannel, and Calico. Special edge cases often seen in telecommunication services, edge computing, and virtualization are handled by Multus, allowing multiple network interfaces to pods.
+
+  - Be aware that all Kubernetes and OpenShift networking features, such as services, ingress, and routes, ignore the extra network devices provided by Multus.
+
+## **5.3.** Exposing Applications for External Access
+
+- **Ingress vs Egress**
+  - Ingress refers to the right to enter a property, while egress refers to the right to exit a property.
+  
+  - In Ingress Traffic, The source lies in an external network and the destination resides inside the host network. Hence, Ingress traffic is composed of all the data communications and network traffic originating from external networks and destined for a node in the host network.
+
+  - Egress traffic is the reverse of ingress traffic. Egress is all traffic is directed towards an external network and originated from inside the host network.
+
+  - From the point of view of a Kubernetes pod, ingress is incoming traffic to the pod, and egress is outgoing traffic from the pod. In Kubernetes network policy, you create ingress and egress “allow” rules independently
+
+- OpenShift Container Platform offers many ways to expose your applications to external networks. You can expose HTTP and HTTPS traffic, TCP applications, and also non-TCP traffic. Some of these methods are service types, such as NodePort or load balancer, while others use their own API resource, such as Ingress and Route.
+
+- OpenShift routes allow you to expose your applications to external networks. With routes, you can access your application with a unique host name that is publicly accessible. Routes rely on a router plug-in to redirect the traffic from the public IP to pods.
+
+- The most common way to manage ingress traffic is with the Ingress Controller. OpenShift implements the Ingress Controller with a shared router service that runs as a pod inside the cluster. You can scale and replicate this pod like any other regular pod. This router service is based on the open source software HAProxy.
+
+- Routes and ingress are the main resources for handling ingress traffic:-
+  - **Route:** Routes provide ingress traffic to services in the cluster. Routes were created before Kubernetes ingress objects and provide more features. Routes provide advanced features that may not be supported by Kubernetes ingress controllers through a standard interface, such as TLS re-encryption, TLS passthrough, and split traffic for blue-green deployments.
+
+  - **Ingress:** An ingress is a Kubernetes resource that provides some of the same features as routes (which are an OpenShift resource). Ingresses accept external requests and proxy them based on the route. You can only allow certain types of traffic: HTTP, HTTPS and server name identification (SNI), and TLS with SNI. In OpenShift, routes are generated to meet the conditions specified by the ingress object.
+
+- There are alternatives to ingress and routes, but they are for special use cases. The following service types provide external access to services:-
+  - **External load balancer:** This resources instructs OpenShift to spin up a load balancer in a cloud environment. A load balancer instructs OpenShift to interact with the cloud provider in which the cluster is running to provision a load balancer.
+
+  - **Service external IP:** This method instructs OpenShift to set NAT rules to redirect traffic from one of the cluster IPs to the container.
+
+  - **NodePort:** With this method, OpenShift exposes a service on a static port on the node IP address. You must ensure that the external IP addresses are properly routed to the nodes.
+
+- **Creating Routes:** The easiest and preferred way to create a route (secure or insecure) is to use the `oc expose service <service-name>` command. Use the `--hostname` option to provide a custom host name for the route.
+
+    ```bash
+   [user@demo ~]$ oc expose service api-frontend --hostname api.apps.acme.com
+    ```
+
+  When you omit the host name, OpenShift generates a host name for you with the following structure:
+  
+  ```bash
+  <route-name>-<project-name>.<default-domain>
+  ```
+
+  For example, if you create a frontend route in an api project, in a cluster that uses _apps.example.com_ as the wildcard domain, then the route host name will be: _frontend.api.apps.example.com.
+
+- **NOTE:**  
+  - The DNS server that hosts the wildcard domain is unaware of any route host names; it only resolves any name to the configured IPs. Only the OpenShift router knows about route host names, treating each one as an HTTP virtual host.
+
+  - Invalid wildcard domain host names, that is, host names that do not correspond to any route, are blocked by the OpenShift router and result in an HTTP 404 error.
+
+  - For performance reasons, routers send requests directly to pods based on service configuration. That is, routes bypass services, but uses the service configuration to determine the pods to which to route the traffic.
+
+- Consider the following settings when creating a route through a yaml definition file:-
+  - The name of a service. The route uses the service to determine the pods to which to route the traffic.
+
+  - A host name for the route. A route is always a subdomain of your cluster wildcard domain. For example, if you are using a wildcard domain of apps.dev-cluster.acme.com, and need to expose a front-end service through a route, then it will be named:
+
+    ```bash
+    frontend.apps.dev-cluster.acme.com
+    ```
+
+    However, You can also let OpenShift automatically generate a host name for the route
+
+  - An optional path, for path-based routes.
+
+  - A target port on which the application listens i.e. The application port because routes bypass services, this must match the application port and not the service port. (The target port usually corresponds to the port that you define in the targetPort key of a service)
+
+  - An encryption strategy, depending on whether you need a secure or insecure route.
+
+- **Securing Routes:** Routes can be either secured or unsecured. Secure routes provide the ability to use several types of TLS termination to serve certificates to the client. Unsecured routes are the simplest to configure because they require no key or certificates, but secured routes encrypt traffic to and from the pods.
+
+- **OpenShift Secure Routes:** A secured route specifies the TLS termination of the route. The available types of termination are presented in the following list:-
+  
+  - **Edge:** With edge termination, TLS termination occurs at the router, before the traffic is routed to the pods. The router serves the TLS certificates, so you must configure them into the route; otherwise, OpenShift assigns its own certificate to the router for TLS termination. Because TLS is terminated at the router, the traffic between the client and the router is encrypted, but traffic between the router and the application is not.
+
+  - **Passthrough:** With passthrough termination, encrypted traffic is sent straight to the destination pod without the router providing TLS termination. In this mode, the application is responsible for serving certificates for the traffic. Since the application exposes its TLS certificate, the traffic is encrypted between the client and the application. Passthrough is currently the only method that supports mutual authentication between the application and a client that accesses it.
+
+  - **Re-encryption:** Re-encryption is a variation on edge termination, whereby the router terminates TLS with a certificate, and then re-encrypts its connection to the endpoint, which might have a different certificate. Therefore, the full path of the connection is encrypted, even over the internal network. The router uses health checks to determine the authenticity of the host.
+
+## **5.5.** Configuring Network Policies
+
+- Network policies allow you to configure isolation policies for individual pods. Network policies do not require administrative privileges, giving developers more control over the applications in their projects.
+
+- You can use network policies to create logical zones in the SDN that map to your organization network zones. The benefit of this approach is that the location of running pods becomes irrelevant because network policies allow you to segregate traffic regardless of where it originates.
+
+- To manage network communication between two namespaces, assign a label to the namespace that needs access to another namespace. The following command assigns the name=network-1 label to the network-1 namespace.
+
+    ```bash
+    [user@demo ~]$ oc label namespace network-1 name=network-1
+    ```
+
+- Checkout the example in the ROLE page that describe how to define network policies:-
+  - that allow communication between the network-1 and network-2 namespaces
+  - that allows traffic from all the pods and ports in the network-1 namespace to all pods and ports in the network-2 namespace. This policy is less restrictive than the network-1 policy, because it does not restrict traffic from any pods in the network-1 namespace
+  - that allows ingress from OpenShift monitoring and Ingress Controllers.
+
+- Network policies are Kubernetes resources. As such, you can manage them using oc commands
+
+- One benefit of using network policies is the management of security between projects (tenants) that you cannot do with layer 2 technologies, such as VLANs. This approach allows you to create tailored policies between projects to make sure users can only access what they should (which conforms to the least privilege approach).
+
+## **5.8.** Summary
+
+- OpenShift implements a software-defined networking (SDN) to manage the network infrastructure of the cluster. SDN decouples the software that handles the traffic(control plane) from the underlying mechanisms that route the traffic(data plane).
+
+- Kubernetes provides services that allow the logical grouping of pods under a common access route. Services act as load balancers in front of one or more pods.
+
+- Services use selectors (labels) that indicate which pods available to the service.
+
+- There are two kind of routes: secure, and insecure. Secure routes encrypt the traffic using TLS certificates, and insecure routes forward traffic over an unencrypted connection.
+
+- Secure routes support three modes: edge, passthrough, and re-encryption.
+
+- Network policies control network traffic to pods. Logical zones can be created in the SDN to segregate traffic among pods in any namespace.
+
+# **Chapter 6:** Controlling Pod Scheduling
+
+## **6.1.** Controlling Pod Scheduling Behavior
+
+### Introducing the OpenShift Scheduler Algorithm
+
+- The pod scheduler determines placement of new pods onto nodes in the OpenShift cluster. It is designed to be highly configurable and adaptable to different clusters. The default configuration shipped with Red Hat OpenShift Container Platform supports the common data center concepts of zones and regions by using node labels, affinity rules, and anti-affinity rules.
+
+- The OpenShift pod scheduler algorithm follows a three step process:-
+  - Filtering nodes
+  - Prioritizing the filtered list of nodes
+  - Selecting the best fit node
+
+- **Filtering Nodes:-**
+  - The scheduler first filters the list of running nodes by evaluating each node against a set of predicates, such as the availability of host ports, or whether a pod can be scheduled to a node experiencing either disk or memory pressure.
+
+  - A pod can define a node selector that matches the labels in the cluster nodes. Nodes whose labels do not match are not eligible
+
+  - A pod can also define resource requests for compute resources such as CPU, memory, and storage. Nodes that have insufficient free computer resources are not eligible.
+
+  - Another filtering check evaluates if the list of nodes have any taints, and if so whether the pod has an associated toleration that can accept the taint. If a pod cannot accept the taint of a node, then the node is not eligible. By default, control plane nodes include the taint node-role.kubernetes.io/master:NoSchedule. A pod that does not have a matching toleration for this taint will not be scheduled to a control plane node.
+
+  The end result of the filtering step is typically a shorter list of node candidates that are eligible to run the pod. In some cases, none of the nodes are filtered out, which means the pod could run on any of the nodes. In other cases, all of the nodes are filtered out, which means the pod cannot be scheduled until a node with the desired prerequisites becomes available.
+
+- **Prioritizing the filtered list of nodes:-**
+
+  - The list of candidate nodes is evaluated using multiple priority criteria that add up to a weighted score. Nodes with higher values are better candidates to run the pod.
+
+  - Among the criteria are affinity and anti-affinity rules. Nodes with higher affinity for the pod have a higher score, and nodes with higher anti-affinity have a lower score.
+
+  - A common use for affinity rules is to schedule related pods to be close to each other, for performance reasons. An example is to use the same network backbone for pods that synchronize with each other.
+
+  - A common use for anti-affinity rules is to schedule related pods that are not too close to each other, for high availability. An example is to avoid scheduling all pods from the same application to the same node.
+
+- **Selecting the best fit node:-**
+
+  - The candidate list is sorted based on these scores, and the node with the highest score is selected to host the pod. If multiple nodes have the same high score, then one is selected in a round-robin fashion.
+
+- The scheduler is flexible and can be customized for advanced scheduling situations. Additionally, although this course will focus on pod placement using node labels and node selectors, pods can also be placed using pod affinity and anti-affinity rules, as well as node affinity and anti-affinity rules. Customizing the scheduler and covering these alternative pod placement scenarios is outside the scope of this course.
+
+### Scheduling and Topology
+
+- A common topology for large data centers, such as cloud providers, is to organize hosts into regions and zones:-
+  - **Region:** A region is a set of hosts in a close geographic area, which guarantees high-speed connectivity between them.
+
+  - **Zone:** A zone, also called an availability zone, is a set of hosts that might fail together because they share common critical infrastructure components, such as a network switch, a storage array, or a uninterruptible power supply (UPS).
+
+  As an example of regions and zones, Amazon Web Services (AWS) has a region in northern Virginia (us-east-1) with 6 availability zones, and another region in Ohio (us-east-2) with 3 availability zones. Each of the AWS availability zones can contain multiple data centers potentially consisting of hundreds of thousands of servers.
+
+- The standard configuration of the OpenShift pod scheduler supports this kind of cluster topology by defining predicates based on the region and zone labels. The predicates are defined in such a way that:-
+  - Replica pods, created from the same deployment (or deployment configuration), are scheduled to run on nodes that have the same value for the region label.
+  - Replica pods are scheduled to run on nodes that have different values for the zone label.
+
+### Labeling Nodes
+
+- As an OpenShift cluster administrator, you can add additional labels to your nodes. For example, you might label nodes with the env label using the values of dev, qa, or prod with the intent that development, quality assurance, and production workloads will be deployed to a specific subset of nodes. The labels you choose are arbitrary, but you must publish the labels and their associated values to your developers so that they can configure their applications appropriately.
+
+- Use the **oc label** command as a cluster administrator to immediately add, update, or remove a node label.
+
+### Labeling Machine Sets
+
+- **Machines vs MachineSet:-**
+  - Machines: A fundamental unit that describes the host for a Node. A machine has a providerSpec, which describes the types of compute nodes that are offered for different cloud platforms. For example, a machine type for a worker node on Amazon Web Services (AWS) might define a specific machine type and required metadata.
+
+  - MachineSets: Groups of machines. What ReplicaSets are to Pods, MachineSets are to machines. If you need more machines or must scale them down, you change the replicas field on the MachineSet to meet your compute need.
+
+- Although node labels are persistent, if your OpenShift cluster contains machine sets, then you should also add labels to the machine set configuration. This ensures that new machines (and the nodes generated from them) will also contain the desired labels. Machine sets are found in clusters using full-stack automation and in some clusters using pre-existing infrastructure that enable cloud provider integration. Bare-metal clusters do not use machine sets.
+
+### Controlling Pod Placement
+
+- Some user applications might require running on a specific set of nodes. For example, certain nodes provide hardware acceleration for certain types of workloads, or the cluster administrator does not want to mix production applications with development applications. Use node labels and node selectors to implement these kinds of scenarios.
+
+### Configuring a Node Selector for a Project
+
+- If the cluster administrator does not want developers controlling the node selector for their pods, then a default node selector should be configured in the project resource. A cluster administrator can either define a node selector when a project is created, or can add or update a node selector after a project is created.
+
+## **6.3.** Limiting Resource Usage by an Application
+
+- A pod definition can include both resource requests and resource limits
+- 
+  - **Resource requests:** Used for scheduling and to indicate that a pod cannot run with less than the specified amount of compute resources. The scheduler tries to find a node with sufficient compute resources to satisfy the pod requests.
+  
+  - **Resource limits:** Used to prevent a pod from using up all compute resources from a node. The node that runs a pod configures the Linux kernel cgroups feature to enforce the pod's resource limits.
+  
+  Resource request and resource limits should be defined for each container in either a deployment or a deployment configuration resource. If requests and limits have not been defined, then you will find a _resources: {}_ line for each container.
+
+- OpenShift Container Platform can enforce quotas that track and limit the use of two kinds of resources:-
+  - **Object counts:** The number of Kubernetes resources, such as pods, services, and routes.
+  - **Compute resources:** The number of physical or virtual hardware resources, such as CPU, memory, and storage capacity.
+
+- Imposing a quota on the number of Kubernetes resources improves the stability of the OpenShift control plane by avoiding unbounded growth of the Etcd database. Quotas on Kubernetes resources also avoids exhausting other limited software resources, such as IP addresses for services.
+
+- In a similar way, imposing a quota on the amount of compute resources avoids exhausting the compute capacity of a single node in an OpenShift cluster. It also avoids having one application starve other applications in a shared cluster by using all the cluster capacity.
+
+- OpenShift manages quotas for the number of resources and the use of compute resources in a cluster by using a ResourceQuota resource, or a quota. A quota specifies hard resource usage limits for a project. All attributes of a quota are optional, meaning that any resource that is not restricted by a quota can be consumed without bounds.
+
+- **NOTE:** Although a single quota resource can define all of the quotas for a project, a project can also contain multiple quotas. For example, one quota resource might limit compute resources, such as total CPU allowed or total memory allowed. Another quota resource might limit object counts, such as the number of pods allowed or the number of services allowed. The effect of multiple quotas is cumulative, but it is expected that two different ResourceQuota resources for the same project do not limit the use of the same type of Kubernetes or compute resource. For example, two different quotas in a project should not both attempt to limit the maximum number of pods allowed.
+
+- When a quota is first created in a project, the project restricts the ability to create any new resources that might violate a quota constraint until it has calculated updated usage statistics. After a quota is created and usage statistics are up-to-date, the project accepts the content creation. When creating a new resource, the quota usage immediately increments. When deleting a resource, the quota use decrements during the next full recalculation of quota statistics for the project.
+
+- Quotas are applied to new resources, but they do not affect existing resources. For example, if you create a quota to limit a project to 15 pods, but there are already 20 pods running, then the quota will not remove the additional 5 pods that exceed the quota.
+
+- ResourceQuota constraints are applied for the project as a whole, but many OpenShift processes, such as builds and deployments, create pods inside the project and might fail because starting them would exceed the project quota.
+
+- If a modification to a project exceeds the quota for a resource count, then OpenShift denies the action and returns an appropriate error message to the user. However, if the modification exceeds the quota for a compute resource, then the operation does not fail immediately; OpenShift retries the operation several times, giving the administrator an opportunity to increase the quota or to perform another corrective action, such as bringing a new node online.
+
+- If a quota that restricts usage of compute resources for a project is set, then OpenShift refuses to create pods that do not specify resource requests or resource limits for that compute resource. To use most templates and builders with a project restricted by quotas, the project must also contain a _limitRange_ resource that specifies default values for container resource requests.
+
+- A **LimitRange** resource, also called a limit, defines the default, minimum, and maximum values for compute resource requests, and the limits for a single pod or container defined **inside the project**. A resource request or limit for a pod is the sum of its containers.
+
+- To understand the difference between a limit range and a resource quota, consider that a limit range defines valid ranges and default values for a single pod, and a resource quota defines only top values for the sum of all pods in a project. A cluster administrator concerned about resource usage in an OpenShift cluster usually defines both limits and quotas for a project.
+
+- A limit range resource can also define default, minimum, and maximum values for the storage capacity requested by an image, image stream, or persistent volume claim. If a resource that is added to a project does not provide a compute resource request, then it takes the default value provided by the limit ranges for the project.
+  
+- If a new resource provides compute resource requests or limits that are smaller than the minimum specified by the project limit ranges, then the resource is not created. Similarly, if a new resource provides compute resource requests or limits that are higher than the maximum specified by the project limit ranges, then also the resource is not created.
+
+- Red Hat OpenShift Container Platform does not provide an oc create command specifically for limit ranges like it does for resource quotas. The only alternative is to use YAML or JSON files.
+
+- After a limit range is created in a project, all requests to create new resources are evaluated against each limit range resource in the project. If the new resource violates the minimum or maximum constraint enumerated by any limit range, then the resource is rejected. If the new resource does not set an explicit value, and the constraint supports a default value, then the default value is applied to the new resource as its usage value. All resource update requests are also evaluated against each limit range resource in the project. If the updated resource violates any constraint, the update is rejected.
+
+- Avoid setting LimitRange constraints that are too high, or ResourceQuota constraints that are too low. A violation of LimitRange constraints prevents pod creation, resulting in error messages. A violation of ResourceQuota constraints prevents a pod from being scheduled to any node. The pod might be created but remain in the pending state.
+
+### Applying Quotas to Multiple Projects
+
+- The _ClusterResourceQuota_ resource is created at cluster level, similar to a persistent volume, and specifies resource constraints that apply to multiple projects.
+
+- Cluster administrators can specify which projects are subject to cluster resource quotas in two ways:-
+  - Using the _openshift.io/requester_ annotation to specify the project owner. All projects with the specified owner are subject to the quota.
+
+  - Using a selector. All projects whose labels match the selector are subject to the quota.
+
+- The following is an example of creating a cluster resource quota for all projects owned by the qa user:
+
+    ```bash
+    [user@demo ~]$ oc create clusterquota user-qa \
+        --project-annotation-selector openshift.io/requester=qa \
+        --hard pods=12,secrets=20
+    ```
+
+- The following is an example of creating a cluster resource quota for all projects that have been assigned the environment=qa label:
+   
+    ```bash
+    [user@demo ~]$ oc create clusterquota env-qa \
+        --project-label-selector environment=qa \
+        --hard pods=10,services=5
+    ```
+
+### Customizing the Default Project Template
+
+- Cluster administrators can customize the default project template. Due to this project template, Additional resources, such as quotas, limit ranges, and network policies, are created when a user creates a new project.
+
+- Cluster administrators can Customize the template resource file to add additional resources, such as quotas, limit ranges, and network policies. Recall that quotas are configured by cluster administrators and cannot be added, modified, or deleted by project administrators. Project administrators can modify and delete limit ranges and network policies, even if those resources are created by the project template.
+
+## **6.5.** Scaling an Application
+
+- The number of pod replicas for a specific deployment or deployment configuration can be increased or decreased to meet your needs. Despite the ReplicaSet and ReplicationController resources, the number of replicas needed for an application is typically defined in a deployment or deployment configuration resource. A replica set or replication controller (managed by a deployment or a deployment configuration) guarantees that the specified number of replicas of a pod are running at all times. The replica set or replication controller can add or remove pods as necessary to conform to the desired replica count.
+
+- Both deployments and deployment configurations contain:-
+  - The desired number of replicas
+  - A selector for identifying managed pods
+  - A pod definition, or template, for creating a replicated pod (including labels to apply to the pod)
+
+- Although it is possible to manipulate a replica set or replication controller resource directly, the recommended practice is to manipulate the deployment or deployment configuration resource instead. A new deployment creates either a new replica set or a new replication controller and changes made directly to a previous replica set or replication controller are ignored.
+
+- **Autoscaling Pods:** OpenShift can autoscale a deployment or a deployment configuration based on current load on the application pods, by means of a HorizontalPodAutoscaler resource type.
+
+- A horizontal pod autoscaler resource uses performance metrics collected by the OpenShift Metrics subsystem. The Metrics subsystem comes pre-installed in OpenShift 4, rather than requiring a separate install, as in OpenShift 3. To autoscale a deployment or deployment configuration, you must specify resource requests for pods so that the horizontal pod autoscaler can calculate the percentage of usage.
+
+- The recommended way to create a horizontal pod autoscaler resource is using the `oc autoscale` command.
+
+- Autoscaling for Memory Utilization continues to be a Technology Preview feature for Red Hat OpenShift Container Platform 4.5
+
+- The replication controller does not perform autoscaling, because it does not track load or traffic. The horizontal pod autoscaler resource manages autoscaling.
+
+## Summary
+
+- The default pod scheduler uses regions and zones to achieve both performance and redundancy.
+
+- Labeling nodes and using node selectors influences pod placement.
+
+- Resource requests define the minimum amount of resources a pod needs in order to be scheduled.
+
+- Quotas restrict the amount of resources a project is allowed to consume.
+
+- A customized project template can automatically create quotas and limit ranges for new projects.
+
+- The oc scale command manually scales the number of replicas of a pod.
+
+- Horizontal pod autoscalers dynamically scale pod replicas based on load.
+  
 
 # **Chapter 7:** Describing Cluster Updates
 
@@ -424,9 +793,9 @@
 
 - You use a single interface (https://cloud.redhat.com) to manage the life cycle of all your OpenShift clusters The service defines upgrade paths that correspond to cluster eligibility for certain updates.
 
-- Update paths belong to upgrade channels. A channel can be visualized as a representation of the upgrade path. The channel controls the frequency and stability of updates. The OTA policy engine represents channels as a series of pointers to particular versions within the upgrade path.
+- Update paths belong to upgrade channels. **A channel can be visualized as a representation of the upgrade path**. The channel controls the frequency and stability of updates. The OTA policy engine represents channels as a series of pointers to particular versions within the upgrade path.
 
-- A channel name consists of three parts: the tier (release candidate, fast, and stable), the major version (4), and the minor version (.2). Example channel names include: stable-4.5, fast-4.5, and candidate-4.5. Each channel delivers patches for a given cluster version.
+- A channel name consists of three parts: the tier (release candidate, fast, and stable), the major version (4), and the minor version (.2). Example channel names include: stable-4.5, fast-4.5, and candidate-4.5. **Each channel delivers patches for a given cluster version**.
 
 - **Candidate Channel:** The candidate channel delivers updates for testing the feature acceptance for the next version of OpenShift Container Platform. The features are subject to further checks and are promoted to the fast or stable channels when they meet the quality standards.
 
@@ -444,7 +813,7 @@
 
 - **EXAMPLE:** The following describes how these upgrade paths would apply to Red Hat OpenShift Container Platform version 4.5:-
 
-  - When using the stable-4.5 channel, you can upgrade your cluster from 4.5.0 to 4.5.1 or 4.5.2. If an issue is discovered in the 4.5.3 release, then you cannot upgrade to that version. When a patch becomes available in the 4.5.4 release, you can update your cluster to that version. T
+  - When using the stable-4.5 channel, you can upgrade your cluster from 4.5.0 to 4.5.1 or 4.5.2. If an issue is discovered in the 4.5.3 release, then you cannot upgrade to that version. When a patch becomes available in the 4.5.4 release, you can update your cluster to that version.
 
   - The fast-4.5 channel can deliver 4.5.1 and 4.5.2 updates but not 4.6.1. Administrators must specifically choose a different minor version channel, such as fast-4.6, in order to upgrade to a new release in a new minor version.
 
