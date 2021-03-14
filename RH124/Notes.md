@@ -28,6 +28,61 @@
 
 # **Chapter 2:** Accessing the Command Line
 
+## Difference between **sh** and **bash**:-
+
+- **What is sh?**
+  
+  Technically speaking, the shell is basically a program that interprets commands typed in by the userin a terminal. However, sh is just the specification for the programming language described by the POSIX standard. It has many implementations (ksh88, dash, ...). bash can also be considered an implementation of sh. 
+
+  Because sh is a specification, not an implementation, _/bin/sh_ is a symlink (or a hard link) to an actual implementation on most POSIX systems.
+
+- **What is bash?**
+
+  bash is a programming language that can be thought of as an implementation of sh (although that has changed with time). bash started as an sh-compatible implementation (although it predates the POSIX standard by a few years), but as time passed it has acquired many extensions. Many of these extensions may change the behavior of valid POSIX shell scripts, so by itself bash is not a valid POSIX shell. Rather, it is a dialect of the POSIX shell language.
+
+  bash supports a --posix switch, which makes it more POSIX-compliant. It also tries to mimic POSIX if invoked as sh.
+
+- **sh = bash?**
+
+  For a long time, /bin/sh used to point to /bin/bash on most GNU/Linux systems. As a result, it had almost become safe to ignore the difference between the two. But that started to change recently.
+
+  Some popular examples of systems where /bin/sh does not point to /bin/bash (and on some of which /bin/bash may not even exist) are:-
+    - Modern Debian and Ubuntu systems, which symlink sh to dash by default.
+    - Busybox, which is usually run during the Linux system boot time as part of initramfs. It uses the ash shell implementation.
+    - Solaris has its own sh which for a long time was not POSIX-compliant
+
+- **How can you find out what /bin/sh points to on your system?**
+
+  The complication is that /bin/sh could be a symbolic link or a hard link. If it's a symbolic link, a portable way to resolve it is:
+
+  ```bash
+  % file -h /bin/sh
+  /bin/sh: symbolic link to bash
+  ```
+
+  If it's a hard link, try
+
+  ```bash
+  % find -L /bin -samefile /bin/sh
+  /bin/sh
+  /bin/bash
+  ```
+
+- **Shebang line**
+
+  Ultimately, it's up to you to decide which one to use, by writing the «shebang» line as the very first line of the script.
+    - `#!/bin/sh` : will use sh (and whatever that happens to point to),
+    - `#!/bin/bash` : will use /bin/bash if it's available (and fail with an error message if it's not). Of course, you can also specify another implementation, e.g. `#!/bin/dash`
+
+- **Which one to use?**
+
+  For my own scripts, I prefer sh for the following reasons:
+    - it is standardized
+    - it is much simpler and easier to learn
+    - it is portable across POSIX systems — even if they happen not to have bash, they are required to have sh
+
+  There are advantages to using bash as well. Its features make programming more convenient and similar to programming in other modern programming languages. These include things like scoped local variables and arrays. Plain sh is a very minimalistic programming language.
+
 ## **2.1.** Accessing the Command Line
 
 - A command line is a text-based interface which can be used to input instructions to a computer system. **The Linux command line is provided by a program called the shell**. The shell is basically a program that interprets commands typed in by the user.
@@ -36,9 +91,9 @@
 
 - The default shell for users in Red Hat Enterprise Linux is the GNU Bourne-Again Shell (bash). Bash is an improved version of one of the most successful shells used on UNIX-like systems, the Bourne Shell (sh).
 
-- Using bash to execute commands can be powerful. **The bash shell provides a scripting language that can support automation of tasks**The shell has additional capabilities that can simplify or make possible operations that are hard to accomplish efficiently with graphical tools. 
+- Using bash to execute commands can be powerful. **The bash shell provides a scripting language that can support automation of tasks**. The shell has additional capabilities that can simplify or make possible operations that are hard to accomplish efficiently with graphical tools. 
 
-- When a shell is used interactively, it displays a string when it is waiting for a command from the user. this is called the shell prompt. When a regular user starts a shell, the default prompt ends with a **$** characterThe $ character is replaced by a **#** character if the shell is running as the superuser, root. this makes it more obvious that it is a superuser shell, which helps to avoid accidents and mistakes which can affect the whole system.
+- When a shell is used interactively, it displays a string when it is waiting for a command from the user. this is called the shell prompt. When a regular user starts a shell, the default prompt ends with a **$** character. The $ character is replaced by a **#** character if the shell is running as the superuser, root. This makes it more obvious that it is a superuser shell, which helps to avoid accidents and mistakes which can affect the whole system.
 
 - To get a shell prompt you must start a terminal program in the graphical environmentThe shell prompt is provided in an application window of your graphical terminal program.
 
