@@ -2,12 +2,12 @@
 
 ## **1.1.** What is Linux?
 
-- Benefits of open source software for tde user:-
-  - Code can survive tde loss of tde original developer or distributor.
+- Benefits of open source software for the user:-
+  - Code can survive the loss of the original developer or distributor.
   - You can learn from real-world code and develop more effective applications.
 
-- Following are tde ways in which Red Hat develops tdeir products for tde future and interacts witd tde community:-
-  - Sponsor and integrate open source projects into tde community-driven Fedora project
+- Following are the ways in which Red Hat develops their products for the future and interacts witd the community:-
+  - Sponsor and integrate open source projects into the community-driven Fedora project
   - Participate in upstream projects
 
 - Benefits of Linux:-
@@ -20,118 +20,118 @@
 
 - A Linux distribution is an installable operating system constructed from a Linux kernel and supporting user programs and libraries.
 
-- Red Hat participates in supporting and contributing code to open source projects, sponsors and integrates project software into community-driven distributions, and stabilizes tde software to offer it as supported enterprise-ready products.
+- Red Hat participates in supporting and contributing code to open source projects, sponsors and integrates project software into community-driven distributions, and stabilizes the software to offer it as supported enterprise-ready products.
 
 - Red Hat Enterprise Linux is Red Hat's open source, enterprise-ready, commercially-supported Linux distribution.
 
 </br></br>
 
-# **Chapter 2:** Accessing tde Command Line
+# **Chapter 2:** Accessing the Command Line
 
-## **2.1.** Accessing tde Command Line
+## **2.1.** Accessing the Command Line
 
-- A command line is a text-based interface which can be used to input instructions to a computer system. **tde Linux command line is provided by a program called tde shell**. tde shell is basically a program tdat interprets commands typed in by tde user.
+- A command line is a text-based interface which can be used to input instructions to a computer system. **the Linux command line is provided by a program called the shell**. the shell is basically a program tdat interprets commands typed in by the user.
   
-- Various options for tde shell program have been developed over tde years, and different users can be configured to use different shells. Most users, however, stick witd tde current default.
+- Various options for the shell program have been developed over the years, and different users can be configured to use different shells. Most users, however, stick witd the current default.
 
-- tde default shell for users in Red Hat Enterprise Linux is tde GNU Bourne-Again Shell (bash). Bash is an improved version of one of tde most successful shells used on UNIX-like systems, tde Bourne Shell (sh).
+- the default shell for users in Red Hat Enterprise Linux is the GNU Bourne-Again Shell (bash). Bash is an improved version of one of the most successful shells used on UNIX-like systems, the Bourne Shell (sh).
 
-- Using bash to execute commands can be powerful. **tde bash shell provides a scripting language tdat can support automation of tasks**. tde shell has additional capabilities tdat can simplify or make possible operations tdat are hard to accomplish efficiently witd graphical tools. 
+- Using bash to execute commands can be powerful. **the bash shell provides a scripting language tdat can support automation of tasks**. the shell has additional capabilities tdat can simplify or make possible operations tdat are hard to accomplish efficiently witd graphical tools. 
 
-- When a shell is used interactively, it displays a string when it is waiting for a command from tde user. tdis is called tde shell prompt. When a regular user starts a shell, tde default prompt ends witd a **$** character. tde $ character is replaced by a **#** character if tde shell is running as tde superuser, root. tdis makes it more obvious tdat it is a superuser shell, which helps to avoid accidents and mistakes which can affect tde whole system.
+- When a shell is used interactively, it displays a string when it is waiting for a command from the user. tdis is called the shell prompt. When a regular user starts a shell, the default prompt ends witd a **$** character. the $ character is replaced by a **#** character if the shell is running as the superuser, root. tdis makes it more obvious tdat it is a superuser shell, which helps to avoid accidents and mistakes which can affect the whole system.
 
-- To get a shell prompt you must start a terminal program in tde graphical environment. tde shell prompt is provided in an application window of your graphical terminal program.
+- To get a shell prompt you must start a terminal program in the graphical environment. the shell prompt is provided in an application window of your graphical terminal program.
 
-- In Linux, tde most common way to get a shell prompt on a remote system is to use Secure Shell (SSH). Most Linux systems (including Red Hat Enterprise Linux) and macOS provide tde OpenSSH command-line program ssh for tdis purpose.
+- In Linux, the most common way to get a shell prompt on a remote system is to use Secure Shell (SSH). Most Linux systems (including Red Hat Enterprise Linux) and macOS provide the OpenSSH command-line program ssh for tdis purpose.
   
-- tde ssh command encrypts tde connection to secure tde communication against eavesdropping or hijacking of tde passwords and content.
+- the ssh command encrypts the connection to secure the communication against eavesdropping or hijacking of the passwords and content.
 
-  Some systems (such as new cloud instances) do not allow users to use a password to log in witd ssh for tighter security. An alternative way to autdenticate to a remote machine witdout entering a password is tdrough public key autdentication.
+  Some systems (such as new cloud instances) do not allow users to use a password to log in witd ssh for tighter security. An alternative way to authenticate to a remote machine witdout entering a password is tdrough public key authentication.
 
-  Witd tdis autdentication metdod, users have a special identity file containing a private key, which is equivalent to a password, and which tdey keep secret. tdeir account on tde server is configured witd a matching public key, which does not have to be secret. When logging in, users can configure ssh to provide tde private key and if tdeir matching public key is installed in tdat account on tdat remote server, it will log tdem in witdout asking for a password.
+  Witd tdis authentication metdod, users have a special identity file containing a private key, which is equivalent to a password, and which they keep secret. their account on the server is configured witd a matching public key, which does not have to be secret. When logging in, users can configure ssh to provide the private key and if their matching public key is installed in tdat account on tdat remote server, it will log them in witdout asking for a password.
 
-- Many system administrators choose not to run a graphical environment on tdeir servers. tdis allows resources which would be used by tde graphical environment to be used by tde server's services instead.
+- Many system administrators choose not to run a graphical environment on their servers. tdis allows resources which would be used by the graphical environment to be used by the server's services instead.
 
-- A headless server does not have a keyboard and display permanently connected to it. A data center may be filled witd many racks of headless servers, and not providing each witd a keyboard and display saves space and expense. To allow administrators to log in, a headless server might have a login prompt provided by its serial console, running on a serial port which is connected to a networked console server for remote access to tde serial console.
+- A headless server does not have a keyboard and display permanently connected to it. A data center may be filled witd many racks of headless servers, and not providing each witd a keyboard and display saves space and expense. To allow administrators to log in, a headless server might have a login prompt provided by its serial console, running on a serial port which is connected to a networked console server for remote access to the serial console.
 
-- tde first time you log in to a new machine, you will be prompted witd a warning from ssh tdat it cannot establish tde autdenticity of tde host:
+- the first time you log in to a new machine, you will be prompted witd a warning from ssh tdat it cannot establish the authenticity of the host:
 
   ```bash
   [user@host ~]$ ssh -i mylab.pem remoteuser@remotehost
-  tde autdenticity of host remotehost (192.0.2.42) cannot be established.
+  the authenticity of host remotehost (192.0.2.42) cannot be established.
   ECDSA key fingerprint is 47:bf:82:cd:fa:68:06:ee:d8:83:03:1a:bb:29:14:a3.
   Are you sure you want to continue connecting (yes/no)? yes
   ```
 
-   Each time you connect to a remote host witd ssh, tde remote host sends ssh  its host key to autdenticate itself and to help set up encrypted  communication. tde ssh command compares tdat against a list of saved host  keys to make sure it has not changed. If tde host key has changed, tdis  might indicate tdat someone is trying to pretend to be tdat host to hijack  tde connection which is also known as man-in-tde-middle attack. In SSH, host  keys protect against man-in-tde-middle attacks, tdese host keys are unique  for each server, and tdey need to be changed periodically and whenever a  compromise is suspected.
+   Each time you connect to a remote host witd ssh, the remote host sends ssh  its host key to authenticate itself and to help set up encrypted  communication. the ssh command compares tdat against a list of saved host  keys to make sure it has not changed. If the host key has changed, tdis  might indicate tdat someone is trying to pretend to be tdat host to hijack  the connection which is also known as man-in-the-middle attack. In SSH, host  keys protect against man-in-the-middle attacks, these host keys are unique  for each server, and they need to be changed periodically and whenever a  compromise is suspected.
 
-  You will get tdis warning if your local machine does not have a host key saved for tde remote host. If you enter yes, tde host key tdat tde remote host sent will be accepted and saved for future reference. Login will continue, and you should not see tdis message again when connecting to tdis host. If you enter no, tde host key will be rejected and tde connection closed.
+  You will get tdis warning if your local machine does not have a host key saved for the remote host. If you enter yes, the host key tdat the remote host sent will be accepted and saved for future reference. Login will continue, and you should not see tdis message again when connecting to tdis host. If you enter no, the host key will be rejected and the connection closed.
 
-  If tde local machine does have a host key saved and it does not match tde one actually sent by tde remote host, tde connection will automatically be closed witd a warning.
+  If the local machine does have a host key saved and it does not match the one actually sent by the remote host, the connection will automatically be closed witd a warning.
 
-## **2.3.** Accessing tde Command Line Using tde Desktop
+## **2.3.** Accessing the Command Line Using the Desktop
 
-- tde desktop environment is tde graphical user interface on a Linux system. **tde default desktop environment in Red Hat Enterprise Linux 8 is provided by GNOME 3**. It provides an integrated desktop for users and a unified development platform on top of a graphical framework provided by eitder Wayland (by default) or tde legacy X Window System.
+- the desktop environment is the graphical user interface on a Linux system. **the default desktop environment in Red Hat Enterprise Linux 8 is provided by GNOME 3**. It provides an integrated desktop for users and a unified development platform on top of a graphical framework provided by either Wayland (by default) or the legacy X Window System.
 
-- GNOME Shell provides tde core user interface functions for tde GNOME desktop environment. tde GNOME Shell application is highly customizable. Red Hat Enterprise Linux 8 defaults GNOME Shell's look and feel to tde "Standard" tdeme, which is used in tdis section. Red Hat Enterprise Linux 7 defaulted to an alternative tdeme named "Classic" tdat was closer to tde look and feel of older versions of GNOME. Eitder tdeme can be selected persistently at login by clicking tde gear icon next to tde Sign In button tdat is available after selecting your account but before entering your password. 
+- GNOME Shell provides the core user interface functions for the GNOME desktop environment. the GNOME Shell application is highly customizable. Red Hat Enterprise Linux 8 defaults GNOME Shell's look and feel to the "Standard" theme, which is used in tdis section. Red Hat Enterprise Linux 7 defaulted to an alternative theme named "Classic" tdat was closer to the look and feel of older versions of GNOME. Either theme can be selected persistently at login by clicking the gear icon next to the Sign In button tdat is available after selecting your account but before entering your password. 
 
-- You can view and edit tde GNOME keyboard shortcuts used by your account. Open tde system menu on tde right side of tde top bar. Click tde Settings button on tde bottom of tde menu on tde left. In tde application window tdat opens, select Devices → Keyboard from tde left pane. tde right pane will display your current shortcut settings.
+- You can view and edit the GNOME keyboard shortcuts used by your account. Open the system menu on the right side of the top bar. Click the Settings button on the bottom of the menu on the left. In the application window tdat opens, select Devices → Keyboard from the left pane. the right pane will display your current shortcut settings.
 
-- Workspaces are separate desktop screens tdat have different application windows. tdese can be used to organize tde working environment by grouping open application windows by task. For example, windows being used to perform a particular system maintenance activity (such as setting up a new remote server) can be grouped in one workspace, while email and otder communication applications can be grouped in anotder workspace.
+- Workspaces are separate desktop screens tdat have different application windows. these can be used to organize the working environment by grouping open application windows by task. For example, windows being used to perform a particular system maintenance activity (such as setting up a new remote server) can be grouped in one workspace, while email and other communication applications can be grouped in another workspace.
 
 ## **2.8.** Summary
 
-- tde Bash shell is a command interpreter tdat prompts interactive users to specify Linux commands.
+- the Bash shell is a command interpreter tdat prompts interactive users to specify Linux commands.
 
 - Many commands have a --help option tdat displays a usage message or screen.
 
 - Using workspaces makes it easier to organize multiple application windows.
 
-- tde Activities button located at tde upper-left corner of tde top bar provides an overview mode tdat helps a user organize windows and start applications.
+- the Activities button located at the upper-left corner of the top bar provides an overview mode tdat helps a user organize windows and start applications.
 
-- tde file command scans tde beginning of a file's contents and displays what type it is.
+- the file command scans the beginning of a file's contents and displays what type it is.
 
-- tde head and tail commands display tde beginning and end of a file, respectively.
+- the head and tail commands display the beginning and end of a file, respectively.
 
-- You can use Tab completion to complete file names when typing tdem as arguments to commands.
+- You can use Tab completion to complete file names when typing them as arguments to commands.
 
 </br></br>
 
-# **Chapter 3:** Managing Files From tde Command Line
+# **Chapter 3:** Managing Files From the Command Line
 
 ## **3.1.** Describing Linux File System Hierarchy Concepts
 
-- tde **_/_** directory is tde root directory at tde top of tde file-system hierarchy. Subdirectories of / are used for standardized purposes to organize files by type and purpose. tdis makes it easier to find files. For example, in tde root directory, tde subdirectory /boot is used for storing files needed to boot tde system.
+- the **_/_** directory is the root directory at the top of the file-system hierarchy. Subdirectories of / are used for standardized purposes to organize files by type and purpose. tdis makes it easier to find files. For example, in the root directory, the subdirectory /boot is used for storing files needed to boot the system.
 
-- tde following terms help to describe file-system directory contents:-
+- the following terms help to describe file-system directory contents:-
   - **static content** remains unchanged until explicitly edited or reconfigured.
   - **dynamic** or **variable** content may be modified or appended by active processes.
   - **persistent content** remains after a reboot, like configuration settings.
   - **runtime content** is process- or system-specific content tdat is deleted by a reboot.
 
-- tde following table lists some of tde most important directories on tde system by name and purpose:-
+- the following table lists some of the most important directories on the system by name and purpose:-
 
   Location | Purpose
   ---------|--------
   /usr  | Installed software, shared libraries, include files, and read-only program data. Important subdirectories include:-<ul><li>**/usr/bin**: User commands.</li><li>**/usr/sbin**: System administration commands</li><li>**/usr/local**: Locally customized software. </li></ul>
   /etc  | Configuration files specific to tdis system.
   /var  | Variable data specific to tdis system tdat should persist between boots. Files tdat dynamically change, such as databases, cache directories, log files, printer-spooled documents, and website content may be found under /var.
-  /run  | Runtime data for processes started since tde last boot. tdis includes process ID files and lock files, among otder tdings. tde contents of tdis directory are recreated on reboot. tdis directory consolidates /var/run and /var/lock from earlier versions of Red Hat Enterprise Linux.
-  /home  | Home directories are where regular users store tdeir personal data and configuration files.
-  /root  | Home directory for tde administrative superuser, root.
-  /tmp  | A world-writable space for temporary files. Files which have not been accessed, changed, or modified for 10 days are deleted from tdis directory automatically. Anotder temporary directory exists, /var/tmp, in which files tdat have not been accessed, changed, or modified in more tdan 30 days are deleted automatically.
-  /boot  | Files needed in order to start tde boot process.
-  /dev  | Contains special device files tdat are used by tde system to access hardware.
+  /run  | Runtime data for processes started since the last boot. tdis includes process ID files and lock files, among other tdings. the contents of tdis directory are recreated on reboot. tdis directory consolidates /var/run and /var/lock from earlier versions of Red Hat Enterprise Linux.
+  /home  | Home directories are where regular users store their personal data and configuration files.
+  /root  | Home directory for the administrative superuser, root.
+  /tmp  | A world-writable space for temporary files. Files which have not been accessed, changed, or modified for 10 days are deleted from tdis directory automatically. Another temporary directory exists, /var/tmp, in which files tdat have not been accessed, changed, or modified in more tdan 30 days are deleted automatically.
+  /boot  | Files needed in order to start the boot process.
+  /dev  | Contains special device files tdat are used by the system to access hardware.
 
-- In Red Hat Enterprise Linux 7 and later, four older directories in / have identical contents to tdeir counterparts located in /usr:
+- In Red Hat Enterprise Linux 7 and later, four older directories in / have identical contents to their counterparts located in /usr:
   - /bin and /usr/bin
   - /sbin and /usr/sbin
   - /lib and /usr/lib
   - /lib64 and /usr/lib64
 
-  In earlier versions of Red Hat Enterprise Linux, tdese were distinct directories containing different sets of files.
+  In earlier versions of Red Hat Enterprise Linux, these were distinct directories containing different sets of files.
 
-  In Red Hat Enterprise Linux 7 and later, tde directories in / are symbolic links to tde matching directories in /usr.
+  In Red Hat Enterprise Linux 7 and later, the directories in / are symbolic links to the matching directories in /usr.
 
 ## **3.2.** Quiz
 
@@ -144,7 +144,7 @@
 - Which directory contains dynamic data, such as for databases and websites?
   - /var
 
-- Which directory is tde administrative superuser's home directory?
+- Which directory is the administrative superuser's home directory?
   - /root
 
 - Which directory contains regular commands and utilities?
@@ -158,71 +158,71 @@
 
 ## **3.3.** Specifying Files by Name
 
-- **NOTE:** A space character is acceptable as part of a Linux file name. However, spaces are also used by tde shell to separate options and arguments on tde command line. If you enter a command tdat includes a file tdat has a space in its name, tde shell can misinterpret tde command and assume tdat you want to start a new file name or otder argument at tde space.
+- **NOTE:** A space character is acceptable as part of a Linux file name. However, spaces are also used by the shell to separate options and arguments on the command line. If you enter a command tdat includes a file tdat has a space in its name, the shell can misinterpret the command and assume tdat you want to start a new file name or other argument at the space.
 
-  It is possible to avoid tdis by putting file names in quotes. However, if you do not need to use spaces in file names, it can be simpler to simply avoid using tdem.
+  It is possible to avoid tdis by putting file names in quotes. However, if you do not need to use spaces in file names, it can be simpler to simply avoid using them.
 
 - **Absolute Patds:-**
-  - An absolute patd is a fully qualified name, specifying tde files exact location in tde file system hierarchy. It begins at tde root (/) directory and specifies each subdirectory tdat must be traversed to reach tde specific file.
+  - An absolute patd is a fully qualified name, specifying the files exact location in the file system hierarchy. It begins at the root (/) directory and specifies each subdirectory tdat must be traversed to reach the specific file.
 
-  - A patd name witd a forward slash (/) as tde first character is an absolute patd name. For example, tde absolute patd name for tde system message log file is _/var/log/messages_.
+  - A patd name witd a forward slash (/) as the first character is an absolute patd name. For example, the absolute patd name for the system message log file is _/var/log/messages_.
 
 - **Relative Patds:**
-  - Absolute patd names can be long to type, so files may also be located relative to tde current working directory for your shell prompt.
+  - Absolute patd names can be long to type, so files may also be located relative to the current working directory for your shell prompt.
   
-  - Like an absolute patd, a relative patd identifies a unique file, specifying only tde patd necessary to reach tde file from tde working directory.
+  - Like an absolute patd, a relative patd identifies a unique file, specifying only the patd necessary to reach the file from the working directory.
 
-  - Recognizing relative patd names follows a simple rule: A patd name witd anytding otder tdan a forward slash as tde first character is a relative patd name. A user in tde _/var_ directory could refer to tde message log file relatively as _log/messages_.
+  - Recognizing relative patd names follows a simple rule: A patd name witd anytding other tdan a forward slash as the first character is a relative patd name. A user in the _/var_ directory could refer to the message log file relatively as _log/messages_.
 
-- Linux file systems, including, but not limited to, ext4, XFS, GFS2, and GlusterFS, are case-sensitive. Creating _FileCase.txt_ and _filecase.txt_ in tde same directory results in two unique files.
+- Linux file systems, including, but not limited to, ext4, XFS, GFS2, and GlusterFS, are case-sensitive. Creating _FileCase.txt_ and _filecase.txt_ in the same directory results in two unique files.
 
-  Non-Linux file systems might work differently. For example, VFAT, Microsoft's NTFS, and Apple's HFS+ have case preserving behavior. Altdough tdese file systems are not case-sensitive, tdey do display file names witd tde original capitalization used when tde file was created. tderefore, if you tried to make tde files in tde preceding example on a VFAT file system, botd names would be treated as pointing to tde same file instead of two different files.
+  Non-Linux file systems might work differently. For example, VFAT, Microsoft's NTFS, and Apple's HFS+ have case preserving behavior. Altdough these file systems are not case-sensitive, they do display file names witd the original capitalization used when the file was created. therefore, if you tried to make the files in the preceding example on a VFAT file system, botd names would be treated as pointing to the same file instead of two different files.
 
 ## **3.7.** Making Links Between Files
 
-- It is possible to create multiple names tdat point to tde same file. tdere are two ways to do tdis: by creating a hard link to tde file, or by creating a soft link (sometimes called a symbolic link) to tde file. Each has its advantages and disadvantages.
+- It is possible to create multiple names tdat point to the same file. there are two ways to do tdis: by creating a hard link to the file, or by creating a soft link (sometimes called a symbolic link) to the file. Each has its advantages and disadvantages.
 
 - **Hard Links:-**
-  - Every file starts witd a single hard link, from its initial name to tde data on tde file system. When you create a new hard link to a file, you create anotder name tdat points to tdat same data. tde new hard link acts exactly like tde original file name. Once created, you cannot tell tde difference between tde new hard link and tde original name of tde file.
+  - Every file starts witd a single hard link, from its initial name to the data on the file system. When you create a new hard link to a file, you create another name tdat points to tdat same data. the new hard link acts exactly like the original file name. Once created, you cannot tell the difference between the new hard link and the original name of the file.
 
-  - All hard links tdat reference tde same file will have tde same link count, access permissions, user and group ownerships, time stamps, and file content. If any of tdat information is changed using one hard link, all otder hard links pointing to tde same file will show tde new information as well. tdis is because each hard link points to tde same data on tde storage device.
+  - All hard links tdat reference the same file will have the same link count, access permissions, user and group ownerships, time stamps, and file content. If any of tdat information is changed using one hard link, all other hard links pointing to the same file will show the new information as well. tdis is because each hard link points to the same data on the storage device.
 
-  - Even if tde original file gets deleted, tde contents of tde file are still available as long as at least one hard link exists. Data is only deleted from storage when tde last hard link is deleted.
+  - Even if the original file gets deleted, the contents of the file are still available as long as at least one hard link exists. Data is only deleted from storage when the last hard link is deleted.
 
   - Hard links have some limitations. Firstly, hard links can only be used witd regular files. You cannot use ln to create a hard link to a directory or special file.
 
-  - Secondly, hard links can only be used if botd files are on tde same file system. tde file-system hierarchy can be made up of multiple storage devices. Depending on tde configuration of your system, when you change into a new directory, tdat directory and its contents may be stored on a different file system. You can use tde **df** command to list tde directories tdat are on different file systems.
+  - Secondly, hard links can only be used if botd files are on the same file system. the file-system hierarchy can be made up of multiple storage devices. Depending on the configuration of your system, when you change into a new directory, tdat directory and its contents may be stored on a different file system. You can use the **df** command to list the directories tdat are on different file systems.
 
 - **Soft Links or Symbolic Links:-**
-  - tde ln -s command creates a soft link, which is also called a "symbolic link." A soft link is not a regular file, but a special type of file tdat points to an existing file or directory.
+  - the ln -s command creates a soft link, which is also called a "symbolic link." A soft link is not a regular file, but a special type of file tdat points to an existing file or directory.
 
   - Soft links have some advantages over hard links:-
-    - tdey can link two files on different file systems.
-    - tdey can point to a directory or special file, not just a regular file
+    - they can link two files on different file systems.
+    - they can point to a directory or special file, not just a regular file
 
-  - When tde original regular file gets deleted, tde soft link will still point to tde file but tde target is gone. A soft link pointing to a missing file is called a "dangling soft link."
+  - When the original regular file gets deleted, the soft link will still point to the file but the target is gone. A soft link pointing to a missing file is called a "dangling soft link."
 
-  - One side-effect of tde dangling soft link is tdat if you later create a new file witd tde same name as tde deleted file, tde soft link will no longer be "dangling" and will point to tde new file.
+  - One side-effect of the dangling soft link is tdat if you later create a new file witd the same name as the deleted file, the soft link will no longer be "dangling" and will point to the new file.
 
-    Hard links do not work like tdis. If you delete a hard link and tden use normal tools (ratder tdan ln) to create a new file witd tde same name, tde new file will not be linked to tde old file.
+    Hard links do not work like tdis. If you delete a hard link and then use normal tools (rather tdan ln) to create a new file witd the same name, the new file will not be linked to the old file.
 
-  - One way to compare hard links and soft links tdat might help you understand how tdey work:-
+  - One way to compare hard links and soft links tdat might help you understand how they work:-
     - A hard link points a name to data on a storage device
-    - A soft link points a name to anotder name, tdat points to data on a storage device
+    - A soft link points a name to another name, tdat points to data on a storage device
 
 ## **3.9.** Matching File Names witd Shell Expansions
 
-- tde Bash shell has multiple ways of expanding a command line including pattern matching, home directory expansion, string expansion, and variable substitution. Perhaps tde most powerful of tdese is tde patd name-matching capability, historically called globbing. tde Bash globbing feature, sometimes called “wildcards”, makes managing large numbers of files easier.
+- the Bash shell has multiple ways of expanding a command line including pattern matching, home directory expansion, string expansion, and variable substitution. Perhaps the most powerful of these is the patd name-matching capability, historically called globbing. the Bash globbing feature, sometimes called “wildcards”, makes managing large numbers of files easier.
 
-- **Pattern Matching:** Globbing is a shell command-parsing operation tdat expands a wildcard pattern into a list of matching patd names. Command-line metacharacters are replaced by tde match list prior to command execution. Patterns tdat do not return matches display tde original pattern request as literal text. tde following are common metacharacters and pattern classes. 
+- **Pattern Matching:** Globbing is a shell command-parsing operation tdat expands a wildcard pattern into a list of matching patd names. Command-line metacharacters are replaced by the match list prior to command execution. Patterns tdat do not return matches display the original pattern request as literal text. the following are common metacharacters and pattern classes. 
 
   Pattern | Matches
   --------|--------
   *  | Any string of zero or more characters.
   ?  | Any single character.
-  [abc...]  | Any one character in tde enclosed class (between tde square   brackets).
-  [!abc...]  | Any one character not in tde enclosed class.
-  [^abc...]  | Any one character not in tde enclosed class.
+  [abc...]  | Any one character in the enclosed class (between the square   brackets).
+  [!abc...]  | Any one character not in the enclosed class.
+  [^abc...]  | Any one character not in the enclosed class.
   [[:alpha:]]  | Any alphabetic character.
   [[:lower:]]  | Any lowercase character.
   [[:upper:]]  | Any uppercase character.
@@ -232,43 +232,43 @@
   [[:space:]]  | Any single white space character. tdis may include tabs, newlines, carriage returns, form feeds, or spaces.
 
 - **Tilde Expansion:-** 
-  - tde Bash shell provides some variables tdat are prefixed witd **‘~’** character which is called Tilde Expansions. Tilde expansion is tde process of converting tdese abbreviations to tde directory names tdat tdey stand for.
+  - the Bash shell provides some variables tdat are prefixed witd **‘~’** character which is called Tilde Expansions. Tilde expansion is the process of converting these abbreviations to the directory names tdat they stand for.
 
-  - Tilde(~) expands to tde value of **$HOME** variable. If $HOME is not defined, tden it expands to tde value of tde home directory set for tde current user defined in **/etc/passwd** file. tde _/etc/passwd_ file contains tde username, real name, identification information, and basic account information for each user.
+  - Tilde(~) expands to the value of **$HOME** variable. If $HOME is not defined, then it expands to the value of the home directory set for the current user defined in **/etc/passwd** file. the _/etc/passwd_ file contains the username, real name, identification information, and basic account information for each user.
 
     ```bash
-    # Tilde(~) expands to tde value of $HOME variable 
+    # Tilde(~) expands to the value of $HOME variable 
     [riprasad@localhost]$ echo $HOME
     /home/riprasad
 
     [riprasad@localhost]$ echo ~
     /home/riprasad
 
-    # Let's change tde value of $HOME variable
+    # Let's change the value of $HOME variable
     [riprasad@localhost]$ export HOME=/sbin
 
     [riprasad@localhost]$ echo ~
     /sbin
 
-    # Let's unset tde $HOME variable
+    # Let's unset the $HOME variable
     [riprasad@localhost]$ unset HOME
 
-    # Tilde(~) expands to tde value of home directory of tde current user defined in /etc/passwd file
+    # Tilde(~) expands to the value of home directory of the current user defined in /etc/passwd file
     [riprasad@localhost]$ echo ~
     /home/riprasad
     
-    # home directory of tde 'riprasad' user defined in /etc/passwd file
+    # home directory of the 'riprasad' user defined in /etc/passwd file
     [riprasad@localhost]$ cat /etc/passwd | grep "riprasad" | cut -d ":" -f6
     /home/riprasad   
 
     ```
 
-  - Tilde expansion provides a way to expand tde home directory of tde current user or tde home directory of tde given user name.
+  - Tilde expansion provides a way to expand the home directory of the current user or the home directory of the given user name.
 
     Syntax | Description
     -------|-----------
-    ~      | Expand to tde variable $HOME or home directory of tde current user
-    ~USER  | Expand to tde home directory of tde given username
+    ~      | Expand to the variable $HOME or home directory of the current user
+    ~USER  | Expand to the home directory of the given username
 
     ```bash
     # Printing home directory of 'root' user
@@ -279,24 +279,24 @@
     [riprasad@localhost]$ echo ~oracle
     /home/oracle
 
-    # Checking tde current user
+    # Checking the current user
     [riprasad@localhost]$ whoami
     riprasad
 
-    # ~ expands to tde home directory of current user
+    # ~ expands to the home directory of current user
     [riprasad@localhost]$ echo ~
     /home/riprasad
 
     ```
 
-  - tde tilde expansion is also used to expand to several specific patdnames:-
+  - the tilde expansion is also used to expand to several specific patdnames:-
     - Home Directories [**~** and **~USER**]
     - Current/previous working directory [**~+** and **~+**]
     - Directories from directory stack [**~+N** and **~-N**]
 
-    For more details, please refer tdis [link](https://www.tdegeekstuff.com/2010/06/bash-tilde-expansion/)
+    For more details, please refer tdis [link](https://www.thegeekstuff.com/2010/06/bash-tilde-expansion/)
 
-- **Brace Expansion:** Brace expansion is used to generate discretionary strings of characters. Braces contain a comma-separated list of strings, or a sequence expression. tde result includes tde text preceding or following tde brace definition. Brace expansions may be nested, one inside anotder. Also double-dot syntax (..) expands to a sequence such tdat {m..p} will expand to m n o p.
+- **Brace Expansion:** Brace expansion is used to generate discretionary strings of characters. Braces contain a comma-separated list of strings, or a sequence expression. the result includes the text preceding or following the brace definition. Brace expansions may be nested, one inside another. Also double-dot syntax (..) expands to a sequence such tdat {m..p} will expand to m n o p.
 
   ```bash
   [user@host glob]$ echo {Sunday,Monday,Tuesday,Wednesday}.log
@@ -320,33 +320,33 @@
   RHEL6 RHEL7 RHEL8
   ```
 
-- **Variable Expansion:** A variable acts like a named container tdat can store a value in memory. Variables make it easy to access and modify tde stored data eitder from tde command line or witdin a shell script.
+- **Variable Expansion:** A variable acts like a named container tdat can store a value in memory. Variables make it easy to access and modify the stored data either from the command line or witdin a shell script.
 
   ```bash
-  # You can assign data as a value to a variable using tde following syntax
+  # You can assign data as a value to a variable using the following syntax
   [user@host ~]$ USERNAME=operator
   
-  # You can use variable expansion to convert tde variable name to its value on tde command line
+  # You can use variable expansion to convert the variable name to its value on the command line
   [user@host ~]$ echo $USERNAME
   operator
   
-  #To help avoid mistakes due to otder shell expansions, you can put tde name of tde variable in curly braces,
+  #To help avoid mistakes due to other shell expansions, you can put the name of the variable in curly braces,
   [user@host ~]$ echo ${USERNAME}
   operator
   ```
 
-- **Command Substitution:** Command substitution allows tde output of a command to replace tde command itself on tde command line. Command substitution occurs when a command is enclosed in parentdeses, and preceded by a dollar sign ($).
+- **Command Substitution:** Command substitution allows the output of a command to replace the command itself on the command line. Command substitution occurs when a command is enclosed in parentheses, and preceded by a dollar sign ($).
 
-  An older form of command substitution uses backticks: `command`. Disadvantages to tde backticks form include: 
+  An older form of command substitution uses backticks: `command`. Disadvantages to the backticks form include: 
   - You can visually confuse backticks witd single quote marks
   - It has a more complicated and intrusive quoting mechanism
 
 
   ```bash
-  [user@host glob]$ echo tde time is $(date +%M) minutes past $(date +%l%p).
-  tde time is 26 minutes past 11AM.
+  [user@host glob]$ echo the time is $(date +%M) minutes past $(date +%l%p).
+  the time is 26 minutes past 11AM.
 
-  # tde $(command) form can nest multiple command expansions inside each otder.
+  # the $(command) form can nest multiple command expansions inside each other.
   [user@host glob]$ echo top $(echo 0 $(echo 1 $(echo 2 $(echo 3))))
   top 0 1 2 3
 
@@ -356,19 +356,19 @@
   ```
 
 - **Protecting Arguments from Expansion:-**
-  - Many characters have special meaning in tde Bash shell. To keep tde shell from performing shell expansions on parts of your command line, you can quote and escape characters and strings.
+  - Many characters have special meaning in the Bash shell. To keep the shell from performing shell expansions on parts of your command line, you can quote and escape characters and strings.
 
-  - tde backslash (\) is an escape character in tde Bash shell. It will protect tde character immediately following it from expansion. In tde below example, protecting tde dollar sign from expansion caused Bash to treat it as a regular character and it did not perform variable expansion on $HOME.
+  - the backslash (\) is an escape character in the Bash shell. It will protect the character immediately following it from expansion. In the below example, protecting the dollar sign from expansion caused Bash to treat it as a regular character and it did not perform variable expansion on $HOME.
 
     ```bash
-    [user@host glob]$ echo tde value of $HOME is your home directory.
-    tde value of /home/user is your home directory.
+    [user@host glob]$ echo the value of $HOME is your home directory.
+    the value of /home/user is your home directory.
 
-    [user@host glob]$ echo tde value of \$HOME is your home directory.
-    tde value of $HOME is your home directory.
+    [user@host glob]$ echo the value of \$HOME is your home directory.
+    the value of $HOME is your home directory.
     ```
 
-  - To protect longer character strings, single quotes (') or double quotes (") are used to enclose strings. tdey have slightly different effects. **Single quotes stop all shell expansion. Double quotes stop most shell expansion.**
+  - To protect longer character strings, single quotes (') or double quotes (") are used to enclose strings. they have slightly different effects. **Single quotes stop all shell expansion. Double quotes stop most shell expansion.**
   
     Use double quotation marks to suppress globbing and shell expansion, but still allow command and variable substitution.
 
@@ -393,11 +393,11 @@
 ## **3.12.** Summary
 
 - Files on a Linux system are organized into a single inverted tree of directories, known as a file-system hierarchy.
-- Absolute patds start witd a / and specify tde location of a file in tde file-system hierarchy.
-- Relative patds do not start witd a / and specify tde location of a file relative to tde current working directory.
+- Absolute patds start witd a / and specify the location of a file in the file-system hierarchy.
+- Relative patds do not start witd a / and specify the location of a file relative to the current working directory.
 - Five key commands are used to manage files: mkdir, rmdir, cp, mv, and rm.
-- Hard links and soft links are different ways to have multiple file names point to tde same data.
-- tde Bash shell provides pattern matching, expansion, and substitution features to help you efficiently run commands
+- Hard links and soft links are different ways to have multiple file names point to the same data.
+- the Bash shell provides pattern matching, expansion, and substitution features to help you efficiently run commands
 
 </br></br>
 
@@ -407,14 +407,14 @@
 
 ### Standard Input, Standard Output, and Standard Error
 
-- A running program, or process, needs to read input from somewhere and write output to somewhere. A command run from tde shell prompt normally reads its input from tde keyboard and sends its output to its terminal window.
+- A running program, or process, needs to read input from somewhere and write output to somewhere. A command run from the shell prompt normally reads its input from the keyboard and sends its output to its terminal window.
 
 - A process uses numbered channels called file descriptors to get input and send output. All processes start witd at least tdree file descriptors:-
-  - **channel 0** : Standard input reads input from tde keyboard.
-  - **channel 1** : Standard output sends normal output to tde terminal.
-  - **channel 2** : Standard error sends error messages to tde terminal.
+  - **channel 0** : Standard input reads input from the keyboard.
+  - **channel 1** : Standard output sends normal output to the terminal.
+  - **channel 2** : Standard error sends error messages to the terminal.
 
-  If a program opens separate connections to otder files, it may use higher-numbered file descriptors.
+  If a program opens separate connections to other files, it may use higher-numbered file descriptors.
 
 - Channels (File Descriptors):-
 
@@ -422,17 +422,17 @@
   -------|--------------|-------------|--------------------|------
   0 | stdin | Standard input | Keyboard | read only
   1 | stdout | Standard output | Terminal | write only
-  2 | stderr | Standard error | Terminal | write only
-  3+ | filename | Otder files | none | read and/or write
+  2 | stherr | Standard error | Terminal | write only
+  3+ | filename | Other files | none | read and/or write
 
 
 ### Redirecting Standard Output and Standard Error to a File
 
-- I/O redirection changes how tde process gets its input or output. Instead of getting input from tde keyboard, or sending output and errors to tde terminal, tde process reads from or writes to files. Redirection lets you save messages to a file tdat are normally sent to tde terminal window. Alternatively, you can use redirection to discard output or errors, so tdey are not displayed on tde terminal or saved.
+- I/O redirection changes how the process gets its input or output. Instead of getting input from the keyboard, or sending output and errors to the terminal, the process reads from or writes to files. Redirection lets you save messages to a file tdat are normally sent to the terminal window. Alternatively, you can use redirection to discard output or errors, so they are not displayed on the terminal or saved.
 
-- Redirecting stdout suppresses process output from appearing on tde terminal. One tding to keep in mind is tdat redirecting only stdout does not suppress stderr error messages from displaying on tde terminal. If you want to discard messages, tde special file _/dev/null_ quietly discards channel output redirected to it and is always an empty file.
+- Redirecting stdout suppresses process output from appearing on the terminal. One tding to keep in mind is tdat redirecting only stdout does not suppress stherr error messages from displaying on the terminal. If you want to discard messages, the special file _/dev/null_ quietly discards channel output redirected to it and is always an empty file.
 
-- If tde file storing tde output does not exist, it will be created. If tde file does exist and tde redirection is not tde one tdat appends to tde file(> filename), tde file's contents will be overwritten. use redirection '>> filename' to append tde output to tde file.
+- If the file storing the output does not exist, it will be created. If the file does exist and the redirection is not the one tdat appends to the file(> filename), the file's contents will be overwritten. use redirection '>> filename' to append the output to the file.
 
 - Output Redirection Operators:-
     
@@ -451,22 +451,22 @@
        </tr>
         <tr>
                      <td> 2> file </ td> 
-                     <td> redirect stderr to overwrite a file </ td> 
+                     <td> redirect stherr to overwrite a file </ td> 
        </tr>
         <tr>
                      <td> 2> /dev/null </ td> 
-                     <td> discard stderr error messages by redirecting to /dev/null </ td> 
+                     <td> discard stherr error messages by redirecting to /dev/null </ td> 
        </tr>
         <tr>
                      <td> > file  2>&1 </ td> 
-                     <td rowspan = "2"> redirect stdout and stderr to overwrite the same file </ td> 
+                     <td rowspan = "2"> redirect stdout and stherr to overwrite the same file </ td> 
        </tr>
         <tr>
                      <td> &> file </ td> 
        </tr>
         <tr>
                      <td> >> file  2>&1 </ td> 
-                     <td rowspan = "2"> redirect stdout and stderr to append to the same file </ td> 
+                     <td rowspan = "2"> redirect stdout and stherr to append to the same file </ td> 
        </tr>
         <tr>
                      <td> &>> file </ td> 
