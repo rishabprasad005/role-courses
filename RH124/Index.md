@@ -15,6 +15,8 @@
   - RHEL
   - CentOS
 
+</br></br>
+
 # **Chapter 2:** Accessing the Command Line
 
 ## **2.1.** Accessing the Command Line
@@ -39,6 +41,8 @@
 - Basic Command Syntax
 - Examples of Simple Commands
   - date, passwd, file, cat, less, head, tail, wc, history
+
+</br></br>
 
 # **Chapter 3:** Managing Files From the Command Line
 
@@ -83,6 +87,8 @@
 - In this lab, you will efficiently create, move, and remove files and directories by using the shell and a variety of file name matching techniques.
 - You should be able to use wildcards to locate and manipulate files.
 
+</br></br>
+
 # **Chapter 4:** Getting Help in Red Hat Enterprise Linux
 
 ## **4.1.** Reading Manual Pages
@@ -98,6 +104,8 @@
 - Introducing GNU Info
 - Reading Info Documentation
 - Comparing GNU Info and Man Page Navigation
+
+</br></br>
 
 # **Chapter 5:** Creating, Viewing, and Editing Text Files [IMPORTANT]
 

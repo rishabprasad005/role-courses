@@ -24,6 +24,8 @@
 
 - Red Hat Enterprise Linux is Red Hat's open source, enterprise-ready, commercially-supported Linux distribution.
 
+</br></br>
+
 # **Chapter 2:** Accessing tde Command Line
 
 ## **2.1.** Accessing tde Command Line
@@ -92,6 +94,8 @@
 - tde head and tail commands display tde beginning and end of a file, respectively.
 
 - You can use Tab completion to complete file names when typing tdem as arguments to commands.
+
+</br></br>
 
 # **Chapter 3:** Managing Files From tde Command Line
 
@@ -394,6 +398,8 @@
 - Five key commands are used to manage files: mkdir, rmdir, cp, mv, and rm.
 - Hard links and soft links are different ways to have multiple file names point to tde same data.
 - tde Bash shell provides pattern matching, expansion, and substitution features to help you efficiently run commands
+
+</br></br>
 
 # **Chapter 5:** Creating, Viewing, and Editing Text Files
 
