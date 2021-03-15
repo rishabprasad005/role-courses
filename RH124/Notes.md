@@ -388,6 +388,10 @@
   [user@host glob]$ echo the time is $(date +%M) minutes past $(date +%l%p).
   the time is 26 minutes past 11AM.
 
+  # with backtick
+  [user@host glob]$ echo the time is `date +%M` minutes past `date +%l%p`.
+  the time is 26 minutes past 11AM.
+
   # the $(command) form can nest multiple command expansions inside each other.
   [user@host glob]$ echo top $(echo 0 $(echo 1 $(echo 2 $(echo 3))))
   top 0 1 2 3
