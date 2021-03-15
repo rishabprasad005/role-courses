@@ -254,9 +254,9 @@
   
 ## **3.9.** Matching File Names with Shell Expansions
 
-- The Bash shell has multiple ways of expanding a command line including pattern matching, home directory expansion, string expansion, and variable substitution. Perhaps the most powerful of these is the path name-matching capability, historically called globbingThe Bash globbing feature, sometimes called “wildcards”, makes managing large numbers of files easier.
+- The Bash shell has multiple ways of expanding a command line including pattern matching, home directory expansion, string expansion, and variable substitution. Perhaps the most powerful of these is the path name-matching capability, historically called globbing. The Bash globbing feature, sometimes called “wildcards”, makes managing large numbers of files easier.
 
-- **Pattern Matching:** Globbing is a shell command-parsing operation that expands a wildcard pattern into a list of matching path names. Command-line metacharacters are replaced by the match list prior to command execution. Patterns that do not return matches display the original pattern request as literal textThe following are common metacharacters and pattern classes. 
+- **Pattern Matching:** Globbing is a shell command-parsing operation that expands a wildcard pattern into a list of matching path names. Command-line metacharacters are replaced by the match list prior to command execution. Patterns that do not return matches display the original pattern request as literal text. The following are common metacharacters and pattern classes. 
 
   | Pattern | Matches |
   --------|--------
@@ -276,7 +276,7 @@
 - **Tilde Expansion:-** 
   - The Bash shell provides some variables that are prefixed with **‘~’** character which is called Tilde Expansions. Tilde expansion is the process of converting these abbreviations to the directory names that they stand for.
 
-  - Tilde(~) expands to the value of **$HOME** variable. If $HOME is not defined, then it expands to the value of the home directory set for the current user defined in **/etc/passwd** fileThe _/etc/passwd_ file contains the username, real name, identification information, and basic account information for each user.
+  - Tilde(~) expands to the value of **$HOME** variable. If $HOME is not defined, then it expands to the value of the home directory set for the current user defined in **/etc/passwd** file. The _/etc/passwd_ file contains the username, real name, identification information, and basic account information for each user.
 
     ```bash
     # Tilde(~) expands to the value of $HOME variable 
@@ -338,7 +338,7 @@
 
     For more details, please refer this [link](https://www.thegeekstuff.com/2010/06/bash-tilde-expansion/)
 
-- **Brace Expansion:** Brace expansion is used to generate discretionary strings of characters. Braces contain a comma-separated list of strings, or a sequence expressionThe result includes the text preceding or following the brace definition. Brace expansions may be nested, one inside another. Also double-dot syntax (..) expands to a sequence such that {m..p} will expand to m n o p.
+- **Brace Expansion:** Brace expansion is used to generate discretionary strings of characters. Braces contain a comma-separated list of strings, or a sequence expression. The result includes the text preceding or following the brace definition. Brace expansions may be nested, one inside another. Also double-dot syntax (..) expands to a sequence such that {m..p} will expand to m n o p.
 
   ```bash
   [user@host glob]$ echo {Sunday,Monday,Tuesday,Wednesday}.log
@@ -379,7 +379,7 @@
 
 - **Command Substitution:** Command substitution allows the output of a command to replace the command itself on the command line. Command substitution occurs when a command is enclosed in parentheses, and preceded by a dollar sign ($).
 
-  An older form of command substitution uses backticks: `command`. Disadvantages to the backticks form include: 
+  An older form of command substitution uses backticks: \`_command_`. Disadvantages to the backticks form include: 
   - You can visually confuse backticks with single quote marks
   - It has a more complicated and intrusive quoting mechanism
 
