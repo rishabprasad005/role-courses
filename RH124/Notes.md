@@ -488,47 +488,59 @@
                      <th> Explanation </ th> 
        </tr>
         <tr>
-                     <th> > file </ th> 
-                     <th> redirect stdout to overwrite a file </ th> 
+                     <td> $ command > file </ td> 
+                     <td rowspan = "2"> redirect stdout to overwrite a file </ td> 
+       </tr>
+       <tr>
+                     <td> $ command 1> file </ td> 
        </tr>
         <tr>
-                     <th> >> file </ th> 
-                     <th> redirect stdout to append to a file </ th> 
+                     <td> $ command >> file </ td> 
+                     <td rowspan = "2"> redirect stdout to append to a file </ td> 
+       </tr>
+       <tr>
+                     <td> $ command 1>> file </ td> 
        </tr>
         <tr>
-                     <th> 2> file </ th> 
-                     <th> redirect stderr to overwrite a file </ th> 
+                     <td> $ command 2> file </ td> 
+                     <td> redirect stderr to overwrite a file </ td> 
        </tr>
         <tr>
-                     <th> 2> /dev/null </ th> 
-                     <th> discard stderr error messages by redirecting to /dev/null </ th> 
+                     <td> $ command 2> /dev/null </ td> 
+                     <td> discard stderr error messages by redirecting to /dev/null </ td> 
        </tr>
         <tr>
-                     <th> > file  2>&1 </ th> 
-                     <th rowspan = "2"> redirect stdout and stderr to overwrite the same file </ th> 
+                     <td> $ command > file  2>&1 </ td> 
+                     <td rowspan = "3"> redirect stdout and stderr to overwrite the same file </ td> 
+       </tr>
+       <tr>
+                     <td> $ command 1> file  2>&1 </ td> 
        </tr>
         <tr>
-                     <th> &> file </ th> 
+                     <td> $ command &> file </ td> 
        </tr>
         <tr>
-                     <th> >> file  2>&1 </ th> 
-                     <th rowspan = "2"> redirect stdout and stderr to append to the same file </ th> 
+                     <td> $ command >> file  2>&1 </ td> 
+                     <th rowspan = "3"> redirect stdout and stderr to append to the same file </ td> 
+       </tr>
+       <tr>
+                     <td> $ command 1>> file  2>&1 </ td> 
        </tr>
         <tr>
-                     <th> &>> file </ th> 
+                     <td> $ command &>> file </ td> 
        </tr>
     </table>
 
 - The order of redirection operations is important. The following sequence redirects standard output to file and then redirects standard error to the same place as standard output (file).
 
   ```bash
-   > file 2>&1
+   $ command > file 2>&1
   ``` 
 
   However, the next sequence does redirection in the opposite order. This redirects standard error to the default place for standard output (the terminal window, so no change) and then redirects only standard output to file.
 
   ```bash
-  2>&1 > file
+  $ command 2>&1 > file
   ``` 
 
   Because of this, some people prefer to use the merging redirection operators:-
