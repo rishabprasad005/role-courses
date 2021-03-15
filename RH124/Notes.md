@@ -488,18 +488,12 @@
                      <th> Explanation </ th> 
        </tr>
         <tr>
-                     <td> $ command > file </ td> 
-                     <td rowspan = "2"> redirect stdout to overwrite a file </ td> 
-       </tr>
-       <tr>
-                     <td> $ command 1> file </ td> 
+                     <td> $ command > file (or) $ command 1> file </ td> 
+                     <td> redirect stdout to overwrite a file </ td> 
        </tr>
         <tr>
-                     <td> $ command >> file </ td> 
-                     <td rowspan = "2"> redirect stdout to append to a file </ td> 
-       </tr>
-       <tr>
-                     <td> $ command 1>> file </ td> 
+                     <td> $ command >> file (or) $ command 1>> file</ td> 
+                     <td> redirect stdout to append to a file </ td> 
        </tr>
         <tr>
                      <td> $ command 2> file </ td> 
@@ -521,7 +515,7 @@
        </tr>
         <tr>
                      <td> $ command >> file  2>&1 </ td> 
-                     <th rowspan = "3"> redirect stdout and stderr to append to the same file </ td> 
+                     <td rowspan = "3"> redirect stdout and stderr to append to the same file </ td> 
        </tr>
        <tr>
                      <td> $ command 1>> file  2>&1 </ td> 
