@@ -404,7 +404,7 @@
 - **Protecting Arguments from Expansion:-**
   - Many characters have special meaning in the Bash shell. To keep the shell from performing shell expansions on parts of your command line, you can quote and escape characters and strings.
 
-  - The backslash (\) is an escape character in the Bash shell. It will protect the character immediately following it from expansion. In the below example, protecting the dollar sign from expansion caused Bash to treat it as a regular character and it did not perform variable expansion on $HOME.
+  - The backslash (\\) is an escape character in the Bash shell. It will protect the character immediately following it from expansion. In the below example, protecting the dollar sign from expansion caused Bash to treat it as a regular character and it did not perform variable expansion on $HOME.
 
     ```bash
     [user@host glob]$ echo the value of $HOME is your home directory.
@@ -466,9 +466,9 @@
 
   Number | Channel name | Description | Default connection | Usage
   -------|--------------|-------------|--------------------|------
-  0 | sthin | Standard input | Keyboard | read only
-  1 | sthout | Standard output | Terminal | write only
-  2 | stherr | Standard error | Terminal | write only
+  0 | stdin | Standard input | Keyboard | read only
+  1 | stdout | Standard output | Terminal | write only
+  2 | stderr | Standard error | Terminal | write only
   3+ | filename | Other files | none | read and/or write
 
 
@@ -476,7 +476,7 @@
 
 - I/O redirection changes how the process gets its input or output. Instead of getting input from the keyboard, or sending output and errors to the terminal, the process reads from or writes to files. Redirection lets you save messages to a file that are normally sent to the terminal window. Alternatively, you can use redirection to discard output or errors, so they are not displayed on the terminal or saved.
 
-- Redirecting sthout suppresses process output from appearing on the terminal. One thing to keep in mind is that redirecting only sthout does not suppress stherr error messages from displaying on the terminal. If you want to discard messages, the special file _/dev/null_ quietly discards channel output redirected to it and is always an empty file.
+- Redirecting stdout suppresses process output from appearing on the terminal. One thing to keep in mind is that redirecting only stdout does not suppress stderr error messages from displaying on the terminal. If you want to discard messages, the special file _/dev/null_ quietly discards channel output redirected to it and is always an empty file.
 
 - If the file storing the output does not exist, it will be created. If the file does exist and the redirection is not the one that appends to the file(> filename), the file's contents will be overwritten. use redirection '>> filename' to append the output to the file.
 
@@ -489,30 +489,30 @@
        </tr>
         <tr>
                      <th> > file </ th> 
-                     <th> redirect sthout to overwrite a file </ th> 
+                     <th> redirect stdout to overwrite a file </ th> 
        </tr>
         <tr>
                      <th> >> file </ th> 
-                     <th> redirect sthout to append to a file </ th> 
+                     <th> redirect stdout to append to a file </ th> 
        </tr>
         <tr>
                      <th> 2> file </ th> 
-                     <th> redirect stherr to overwrite a file </ th> 
+                     <th> redirect stderr to overwrite a file </ th> 
        </tr>
         <tr>
                      <th> 2> /dev/null </ th> 
-                     <th> discard stherr error messages by redirecting to /dev/null </ th> 
+                     <th> discard stderr error messages by redirecting to /dev/null </ th> 
        </tr>
         <tr>
                      <th> > file  2>&1 </ th> 
-                     <th rowspan = "2"> redirect sthout and stherr to overwrite the same file </ th> 
+                     <th rowspan = "2"> redirect stdout and stderr to overwrite the same file </ th> 
        </tr>
         <tr>
                      <th> &> file </ th> 
        </tr>
         <tr>
                      <th> >> file  2>&1 </ th> 
-                     <th rowspan = "2"> redirect sthout and stherr to append to the same file </ th> 
+                     <th rowspan = "2"> redirect stdout and stderr to append to the same file </ th> 
        </tr>
         <tr>
                      <th> &>> file </ th> 
