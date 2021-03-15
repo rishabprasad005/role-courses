@@ -77,19 +77,21 @@
 
 - The default shell for users in Red Hat Enterprise Linux is the GNU Bourne-Again Shell (bash). Bash is an improved version of one of the most successful shells used on UNIX-like systems, the Bourne Shell (sh).
 
-- Using bash to execute commands can be powerful. **The bash shell provides a scripting language that can support automation of tasks**. The shell has additional capabilities that can simplify or make possible operations that are hard to accomplish efficiently with graphical tools. 
+- Using bash to execute commands can be powerful. **The bash shell provides a scripting language that can support automation of tasks**. The shell has additional capabilities that can simplify or make possible operations that are hard to accomplish efficiently with graphical tools.
+
+- Shell scripting is scripting in any shell, whereas Bash scripting is scripting specifically for Bash
 
 - When a shell is used interactively, it displays a string when it is waiting for a command from the user. this is called the shell prompt. When a regular user starts a shell, the default prompt ends with a **$** character. The $ character is replaced by a **#** character if the shell is running as the superuser, root. This makes it more obvious that it is a superuser shell, which helps to avoid accidents and mistakes which can affect the whole system.
 
-- To get a shell prompt you must start a terminal program in the graphical environmentThe shell prompt is provided in an application window of your graphical terminal program.
+- To get a shell prompt you must start a terminal program in the graphical environment. The shell prompt is provided in an application window of your graphical terminal program.
 
-- In Linux, the most common way to get a shell prompt on a remote system is to use Secure Shell (SSH). Most Linux systems (including Red Hat Enterprise Linux) and macOS provide the OpenSSH command-line program ssh for this purpose.
+- In Linux, the most common way to get a shell prompt on a remote system is to use Secure Shell (SSH). Most Linux systems (including Red Hat Enterprise Linux) and macOS provide the OpenSSH command-line program _'ssh'_ for this purpose.
   
 - The ssh command encrypts the connection to secure the communication against eavesdropping or hijacking of the passwords and content.
 
   Some systems (such as new cloud instances) do not allow users to use a password to log in with ssh for tighter security. An alternative way to authenticate to a remote machine without entering a password is through public key authentication.
 
-  With this authentication method, users have a special identity file containing a private key, which is equivalent to a password, and which they keep secret. their account on the server is configured with a matching public key, which does not have to be secret. When logging in, users can configure ssh to provide the private key and if their matching public key is installed in that account on that remote server, it will log them in without asking for a password.
+  With this authentication method, users have a special identity file containing a private key, which is equivalent to a password, and which they keep secret. Their account on the server is configured with a matching public key, which does not have to be secret. When logging in, users can configure ssh to provide the private key and if their matching public key is installed in that account on that remote server, it will log them in without asking for a password.
 
 - Many system administrators choose not to run a graphical environment on their servers. this allows resources which would be used by the graphical environment to be used by the server's services instead.
 
@@ -104,7 +106,7 @@
   Are you sure you want to continue connecting (yes/no)? yes
   ```
 
-   Each time you connect to a remote host with ssh, the remote host sends ssh  its host key to authenticate itself and to help set up encrypted  communicationThe ssh command compares that against a list of saved host  keys to make sure it has not changed. If the host key has changed, this  might indicate that someone is trying to pretend to be that host to hijack  the connection which is also known as man-in-the-middle attack. In SSH, host  keys protect against man-in-the-middle attacks, these host keys are unique  for each server, and they need to be changed periodically and whenever a  compromise is suspected.
+   Each time you connect to a remote host with ssh, the remote host sends ssh  its host key to authenticate itself and to help set up encrypted  communication. The ssh command compares that against a list of saved host  keys to make sure it has not changed. If the host key has changed, this  might indicate that someone is trying to pretend to be that host to hijack  the connection which is also known as man-in-the-middle attack. In SSH, host  keys protect against man-in-the-middle attacks, these host keys are unique  for each server, and they need to be changed periodically and whenever a  compromise is suspected.
 
   You will get this warning if your local machine does not have a host key saved for the remote host. If you enter yes, the host key that the remote host sent will be accepted and saved for future reference. Login will continue, and you should not see this message again when connecting to this host. If you enter no, the host key will be rejected and the connection closed.
 
@@ -114,9 +116,9 @@
 
 - The desktop environment is the graphical user interface on a Linux system. **The default desktop environment in Red Hat Enterprise Linux 8 is provided by GNOME 3**. It provides an integrated desktop for users and a unified development platform on top of a graphical framework provided by either Wayland (by default) or the legacy X Window System.
 
-- GNOME Shell provides the core user interface functions for the GNOME desktop environmentThe GNOME Shell application is highly customizable. Red Hat Enterprise Linux 8 defaults GNOME Shell's look and feel to the "Standard" theme, which is used in this section. Red Hat Enterprise Linux 7 defaulted to an alternative theme named "Classic" that was closer to the look and feel of older versions of GNOME. Either theme can be selected persistently at login by clicking the gear icon next to the Sign In button that is available after selecting your account but before entering your password. 
+- GNOME Shell provides the core user interface functions for the GNOME desktop environment. The GNOME Shell application is highly customizable. Red Hat Enterprise Linux 8 defaults GNOME Shell's look and feel to the "Standard" theme, which is used in this section. Red Hat Enterprise Linux 7 defaulted to an alternative theme named "Classic" that was closer to the look and feel of older versions of GNOME. Either theme can be selected persistently at login by clicking the gear icon next to the Sign In button that is available after selecting your account but before entering your password. 
 
-- You can view and edit the GNOME keyboard shortcuts used by your account. Open the system menu on the right side of the top bar. Click the Settings button on the bottom of the menu on the left. In the application window that opens, select Devices → Keyboard from the left paneThe right pane will display your current shortcut settings.
+- You can view and edit the GNOME keyboard shortcuts used by your account. Open the system menu on the right side of the top bar. Click the Settings button on the bottom of the menu on the left. In the application window that opens, select Devices → Keyboard from the left pane. The right pane will display your current shortcut settings.
 
 - Workspaces are separate desktop screens that have different application windows. these can be used to organize the working environment by grouping open application windows by task. For example, windows being used to perform a particular system maintenance activity (such as setting up a new remote server) can be grouped in one workspace, while email and other communication applications can be grouped in another workspace.
 
@@ -142,7 +144,7 @@
 
 ## **3.1.** Describing Linux File System Hierarchy Concepts
 
-- The **_/_** directory is the root directory at the top of the file-system hierarchy. Subdirectories of / are used for standardized purposes to organize files by type and purpose. this makes it easier to find files. For example, in the root directory, the subdirectory /boot is used for storing files needed to boot the system.
+- The **_/_** directory is the root directory at the top of the file-system hierarchy. Subdirectories of / are used for standardized purposes to organize files by type and purpose. This makes it easier to find files. For example, in the root directory, the subdirectory /boot is used for storing files needed to boot the system.
 
 - The following terms help to describe file-system directory contents:-
   - **static content** remains unchanged until explicitly edited or reconfigured.
@@ -150,14 +152,14 @@
   - **persistent content** remains after a reboot, like configuration settings.
   - **runtime content** is process- or system-specific content that is deleted by a reboot.
 
-- The following table lists some of the most important directories on the system by name and purpose:-
+- The following table lists some of the most important directories on the system by name and purpose. For more detailed information, [click here](https://www.tecmint.com/linux-directory-structure-and-important-files-paths-explained/)
 
   Location | Purpose
   ---------|--------
   /usr  | Installed software, shared libraries, include files, and read-only program data. Important subdirectories include:-<ul><li>**/usr/bin**: User commands.</li><li>**/usr/sbin**: System administration commands</li><li>**/usr/local**: Locally customized software. </li></ul>
   /etc  | Configuration files specific to this system.
   /var  | Variable data specific to this system that should persist between boots. Files that dynamically change, such as databases, cache directories, log files, printer-spooled documents, and website content may be found under /var.
-  /run  | Runtime data for processes started since the last boot. this includes process ID files and lock files, among other thingsThe contents of this directory are recreated on reboot. this directory consolidates /var/run and /var/lock from earlier versions of Red Hat Enterprise Linux.
+  /run  | Runtime data for processes started since the last boot. This includes process ID files and lock files, among other things. The contents of this directory are recreated on reboot. This directory consolidates /var/run and /var/lock from earlier versions of Red Hat Enterprise Linux.
   /home  | Home directories are where regular users store their personal data and configuration files.
   /root  | Home directory for the administrative superuser, root.
   /tmp  | A world-writable space for temporary files. Files which have not been accessed, changed, or modified for 10 days are deleted from this directory automatically. Another temporary directory exists, /var/tmp, in which files that have not been accessed, changed, or modified in more than 30 days are deleted automatically.
@@ -170,9 +172,7 @@
   - /lib and /usr/lib
   - /lib64 and /usr/lib64
 
-  In earlier versions of Red Hat Enterprise Linux, these were distinct directories containing different sets of files.
-
-  In Red Hat Enterprise Linux 7 and later, the directories in / are symbolic links to the matching directories in /usr.
+  In earlier versions of Red Hat Enterprise Linux, these were distinct directories containing different sets of files. In Red Hat Enterprise Linux 7 and later, the directories in / are symbolic links to the matching directories in /usr.
 
 ## **3.2.** Quiz
 
@@ -224,7 +224,7 @@
 - It is possible to create multiple names that point to the same file. there are two ways to do this: by creating a hard link to the file, or by creating a soft link (sometimes called a symbolic link) to the file. Each has its advantages and disadvantages.
 
 - **Hard Links:-**
-  - Every file starts with a single hard link, from its initial name to the data on the file system. When you create a new hard link to a file, you create another name that points to that same dataThe new hard link acts exactly like the original file name. Once created, you cannot tell the difference between the new hard link and the original name of the file.
+  - Every file starts with a single hard link, from its initial name to the data on the file system. When you create a new hard link to a file, you create another name that points to that same data. The new hard link acts exactly like the original file name. Once created, you cannot tell the difference between the new hard link and the original name of the file.
 
   - All hard links that reference the same file will have the same link count, access permissions, user and group ownerships, time stamps, and file content. If any of that information is changed using one hard link, all other hard links pointing to the same file will show the new information as well. this is because each hard link points to the same data on the storage device.
 
@@ -232,9 +232,13 @@
 
   - Hard links have some limitations. Firstly, hard links can only be used with regular files. You cannot use ln to create a hard link to a directory or special file.
 
-  - Secondly, hard links can only be used if both files are on the same file systemThe file-system hierarchy can be made up of multiple storage devices. Depending on the configuration of your system, when you change into a new directory, that directory and its contents may be stored on a different file system. You can use the **df** command to list the directories that are on different file systems.
+  - Secondly, hard links can only be used if both files are on the same file system. The file-system hierarchy can be made up of multiple storage devices. Depending on the configuration of your system, when you change into a new directory, that directory and its contents may be stored on a different file system. You can use the **df** command to list the directories that are on different file systems.
 
 - **Soft Links or Symbolic Links:-**
+  - One way to compare hard links and soft links that might help you understand how they work:-
+    - A hard link directly points to the data on a storage device
+    - A soft link points to another name, that points to data on a storage device
+
   - The ln -s command creates a soft link, which is also called a "symbolic link." A soft link is not a regular file, but a special type of file that points to an existing file or directory.
 
   - Soft links have some advantages over hard links:-
@@ -245,32 +249,29 @@
 
   - One side-effect of the dangling soft link is that if you later create a new file with the same name as the deleted file, the soft link will no longer be "dangling" and will point to the new file.
 
-    Hard links do not work like this. If you delete a hard link and then use normal tools (rather than ln) to create a new file with the same name, the new file will not be linked to the old file.
+    Hard links do not work like this. If you delete a hard link and then use normal tools (rather than _ln_) to create a new file with the same name, the new file will not be linked to the old file.
 
-  - One way to compare hard links and soft links that might help you understand how they work:-
-    - A hard link points a name to data on a storage device
-    - A soft link points a name to another name, that points to data on a storage device
-
+  
 ## **3.9.** Matching File Names with Shell Expansions
 
 - The Bash shell has multiple ways of expanding a command line including pattern matching, home directory expansion, string expansion, and variable substitution. Perhaps the most powerful of these is the path name-matching capability, historically called globbingThe Bash globbing feature, sometimes called “wildcards”, makes managing large numbers of files easier.
 
 - **Pattern Matching:** Globbing is a shell command-parsing operation that expands a wildcard pattern into a list of matching path names. Command-line metacharacters are replaced by the match list prior to command execution. Patterns that do not return matches display the original pattern request as literal textThe following are common metacharacters and pattern classes. 
 
-  Pattern | Matches
+  | Pattern | Matches |
   --------|--------
-  *  | Any string of zero or more characters.
-  ?  | Any single character.
-  [abc...]  | Any one character in the enclosed class (between the square   brackets).
-  [!abc...]  | Any one character not in the enclosed class.
-  [^abc...]  | Any one character not in the enclosed class.
-  [[:alpha:]]  | Any alphabetic character.
-  [[:lower:]]  | Any lowercase character.
-  [[:upper:]]  | Any uppercase character.
-  [[:alnum:]]  | Any alphabetic character or digit.
-  [[:punct:]]  | Any printable character not a space or alphanumeric.
-  [[:digit:]]  | Any single digit from 0 to 9.
-  [[:space:]]  | Any single white space character. this may include tabs, newlines, carriage returns, form feeds, or spaces.
+  | *  | Any string of zero or more characters. |
+  | ?  | Any single character. |
+  | [abc...]  | Any one character in the enclosed class (between the square   brackets). |
+  | [!abc...]  | Any one character not in the enclosed class. |
+  | [^abc...]  | Any one character not in the enclosed class. |
+  | [[:alpha:]]  | Any alphabetic character. |
+  | [[:lower:]]  | Any lowercase character. |
+  | [[:upper:]]  | Any uppercase character. |
+  | [[:alnum:]]  | Any alphabetic character or digit. |
+  | [[:punct:]]  | Any printable character not a space or alphanumeric. |
+  | [[:digit:]]  | Any single digit from 0 to 9. |
+  | [[:space:]]  | Any single white space character. this may include tabs, newlines, carriage returns, form feeds, or spaces. |
 
 - **Tilde Expansion:-** 
   - The Bash shell provides some variables that are prefixed with **‘~’** character which is called Tilde Expansions. Tilde expansion is the process of converting these abbreviations to the directory names that they stand for.
