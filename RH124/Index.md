@@ -207,6 +207,8 @@
   - Configure the group members of the supplementary group to run any command as any user using sudo.
   - Set a user-specific password aging policy.
 
+</br></br>
+
 # **Chapter 7:** Controlling Access to Files
 
 ## **7.1.** Interpreting Linux File System Permissions
@@ -256,6 +258,8 @@
   - Create files that are automatically assigned group ownership.
   - Create files that are not accessible outside of the group.
 
+</br></br>
+
 # **Chapter 8:** Monitoring and Managing Linux Processes
 
 ## **8.1.** Listing Processes
@@ -263,4 +267,27 @@
 - After completing this section, you should be able to get information about programs running on a system to determine status, resource use, and ownership, so you can control them.
 - Definition of a Process
 - Describing Process States
-- Listing Processes
+- Listing Processes using **_ps_** command
+
+## **8.3.** Controlling Jobs
+
+- After completing this section, you should be able to use Bash job control to manage multiple processes started from the same terminal session.
+- Describing Jobs and Sessions
+- Running Jobs in the Background
+- `jobs` command
+
+## **8.4.** Guided Exercise: Controlling Jobs
+
+- In this exercise, you will start, suspend, background, and foreground multiple processes using job control.
+
+## **8.5.** Killing Processes
+
+- After completing this section, you should be able to:
+  - Use commands to kill and communicate with processes.
+  - Define the characteristics of a daemon process.
+  - End user sessions and processes.
+- Process control using signals
+- Logging Users Out Administratively
+- Linux Commands: `kill`, `killall`, `ps`, `w`, `pkill`, `pgrep`, `pstree`)
+
+</br></br>

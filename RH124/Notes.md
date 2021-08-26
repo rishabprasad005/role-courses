@@ -230,7 +230,7 @@
 
   - Even if the original file gets deleted, the contents of the file are still available as long as at least one hard link exists. Data is only deleted from storage when the last hard link is deleted.
 
-  - Hard links have some limitations. Firstly, hard links can only be used with regular files. You cannot use ln to create a hard link to a directory or special file.
+  - Hard links have some limitations. Firstly, hard links can only be used with regular files. You cannot use `ln` to create a hard link to a directory or special file.
 
   - Secondly, hard links can only be used if both files are on the same file system. The file-system hierarchy can be made up of multiple storage devices. Depending on the configuration of your system, when you change into a new directory, that directory and its contents may be stored on a different file system. You can use the **df** command to list the directories that are on different file systems.
 
@@ -239,7 +239,7 @@
     - A hard link directly points to the data on a storage device
     - A soft link points to another name, that points to data on a storage device
 
-  - The ln -s command creates a soft link, which is also called a "symbolic link." A soft link is not a regular file, but a special type of file that points to an existing file or directory.
+  - The `ln -s` command creates a soft link, which is also called a "symbolic link." A soft link is not a regular file, but a special type of file that points to an existing file or directory.
 
   - Soft links have some advantages over hard links:-
     - they can link two files on different file systems.
@@ -505,7 +505,7 @@
        </tr>
         <tr>
                      <td> $ command > file  2>&1 </ td> 
-                     <td rowspan = "3"> redirect stdout and stderr to overwrite the same file </ td> 
+                     <td rowspan = "3"> redirect stdout and stderr to overwrite the same file. <br> [`&1` and `&2` means default pace for standard output i.e. terminal] </ td> 
        </tr>
        <tr>
                      <td> $ command 1> file  2>&1 </ td> 
@@ -1697,14 +1697,390 @@ Remember if open a new terminal you won't be able to access either of the variab
   - A current scheduling context
   - Allocated system resources, such as file descriptors and network ports
 
-- An existing (parent) process duplicates its own address space (fork) to create a new (child) process structure. Every new process is assigned a unique process ID (PID) for tracking and security. The PID and the parent's process ID (PPID) are elements of the new process environment.
+- An existing (parent) process duplicates its own address space (_fork_) to create a new (child) process structure. Every new process is assigned a unique process ID (PID) for tracking and security. The PID and the parent's process ID (PPID) are elements of the new process environment.
 
 - Any process may create a child process. All processes are descendants of the first system process, _**systemd**_ on a Red Hat Enterprise Linux 8 system.
 
-- **Lifecycle of a process:** Through the fork routine, a child process inherits security identities, previous and current file descriptors, port and resource privileges, environment variables, and program code. A child process may then exec its own program code. Normally, a parent process sleeps while the child process runs, setting a request (wait) to be signaled when the child completes. Upon exit, the child process has already closed or discarded its resources and environment. The only remaining resource, called a zombie, is an entry in the process table. The parent, signaled awake when the child exited, cleans the process table of the child's entry, thus freeing the last resource of the child process. The parent process then continues with its own program code execution.
+- `Control+Z` is used for suspending a process by sending it the signal **_SIGSTOP_**, which cannot be intercepted by the program. While `Control+C` is used to kill a process with the signal _**SIGINT**_, and can be intercepted by a program so it can clean its self up before exiting, or not exit at all.
 
-- In a multitasking operating system, each CPU (or CPU core) can be working on one process at a single point in time. As a process runs, its immediate requirements for CPU time and resource allocation change. Processes are assigned a state, which changes as circumstances dictate.
+- **Lifecycle of a process:**
+  - Through the _fork routine_, a child process first inherits security identities, previous and current file descriptors, port and resource privileges, environment variables, and program code. Once the inhertitance is complete, the child process then exec its own program code.
+  - Normally, a parent process sleeps while the child process runs, setting a request (wait) to be signaled when the child completes. Upon exit, the child process has already closed or discarded its resources and environment. The only remaining resource, called a **_zombie_**, is an entry in the process table.
+  - The parent, signalled awake when the child exited, cleans the process table of the child's entry, thus freeing the last resource of the child process. The parent process then continues with its own program code execution.
 
-- **Process States:** Linux process states are described in the below table:-
-   
+- In a multitasking operating system, each CPU (or CPU core) can be working on one process at a single point in time. Thus, on a single CPU system, only one process can run at a time. As a process runs, its immediate requirements for CPU time and resource allocation change. Processes are assigned a state, which changes as circumstances dictate.
 
+- **Process States:** Linux process states are described very nicely in a graphical and tabular form in the ROLE course. Please refer the section for more detail. In short, a linux process can be in one of the following states:-
+  - **R** -	Running or runnable (on run queue)
+  - **D**	- Uninterruptible sleep (waiting for some event)
+  - **S**	- Interruptible sleep (waiting for some event or signal)
+  - **T**	- Stopped, either by a job control signal or because it is being traced by a debugger.
+  - **Z**	- Zombie process, terminated but not yet reaped by its parent.
+
+- On a single CPU system where only one process runs at a time. It is possible to see several processes with a state of **R**. However, that doesn't mean that all of them will be running consecutively, some of them will be in waiting state, which is also reperented using the '**R**' flag.
+
+- Process can be suspended, stopped, resumed, terminated, and interrupted using signals. Signals are discussed in more detail later in this chapter. Signals can be used by other processes or by the kernel itself, or by users logged into the system.
+
+- **Why Process States are Important:**
+  - When troubleshooting a system, it is important to understand how the kernel communicates with processes and how processes communicate with each other. At process creation, the system assigns the process a state.
+  - The **_S_** column of the _**top**_ command or the _**STAT**_ column of the _**ps**_ command shows the state of each process.
+
+- **Listing Processes:** The **_ps_** command is used for listing current processes. It can provide detailed process information, including:
+  - User identification (UID), which determines process privileges
+  - Unique process identification (PID)
+  - CPU and real time already expended
+  - How much memory the process has allocated in various locations
+  - The location of process stdout, known as the controlling terminal
+  - The current process state
+
+## **8.3.** Controlling Jobs
+
+### Important Prerequisites
+
+- **Terminal vs TTY vs Console vs Shell**
+  - **Terminal:** The word Terminal comes from terminate, indicating that it's the terminating end or "terminal" end of a communications process. Hence, Terminal in linux or windows provides endpoints for telnet, ssh, and shells.
+  
+  - **TTY**: Teletypewriter or “tty” in shorthand was the first kind of physical terminal. Rather than a screen you'd have a literal typewriter in front of you. When you type on it, you're seeing the text on a piece of paper AND inputing that text into a computer. When that computer replies, you'll see the typewriter automatically type on the same paper.
+
+  - **Console:** Folks in the mid 20th century would have a piece of furniture in their living room called a console or console cabinet. A Console in the context of computers is again a physical terminal device with a screen and keyboard combined inside it. But, it's effectively a Terminal.
+
+  - **Shell:** The Terminal isn't smart. It doesn't actually understands and process your inputs. Therefore, it passes the input to the shell to understand and process it. A shell is the program that the terminal sends user input to. The shell then generates output and passes it back to the terminal for display. sh, bash, ksh, powershell, pwsh etc are some examples of Shells.
+
+  In unix terminology, the short answer is:-
+
+  - terminal = an endpoints for users to interact with the computer
+  - tty = physical terminal
+  - console = physical terminal
+  - shell = command line interpreter
+
+  CONCLUSION: In the software world, Terminal or Console or TTY are, for all intents, synonymous. Originally, they meant a piece of equipment through which you could interact with a computer. In the early days of unix, that meant a teletypewriter(tty), or a console. The name “terminal” came from the electronic point of view, and the name “console” from the furniture point of view.
+
+- **Terminal(TTY) vs Pseudo-Terminal (PTY)**
+  - The answer is in the name -- "_Pseudo_" meaning "not genuine but having the appearance of".
+
+  - In the olden days, the terminals were physical devices connected to the computer via Universal Asynchronous Receiver and Transmitter(_UART_). There was always a piece of hardware attached with an associated device, be it display hardware or a serial port. Hence, we needed a physical terminal for every input/output device that needs to be connected to a computer. That is why the computers in the olden days were bulky and big.
+
+  - But computers started becoming smaller and smaller, and with telnet and ssh, there came a need for software "Pseudo devices" to do the job of standing in for display hardware. Hence, the terminals became a computer program and it was not a physical device anymore.
+  
+  - Because of the introduction of "Pseudo devices" Part of  is that "everything now is a file" in the UNIX paradigm. Programs can use file operations (read and/or write) to interact with the devices.
+  
+  - "Pseudo Terminal" is a software that emulates Terminal hardware, handling input and output in the same way a physical device would so that the software connected is not aware there's not a real device attached. (Check if Pseudo terminal is a Psedo device).
+
+  - So using the word "terminal" in UNIX context today is actually wrong, because everything is a "pseudo-terminal". Thus, when we refer to a Terminal, we're referring to a literal software version of a Terminal. The Windows Terminal or the linux terminal is exactly that.
+
+  - https://dev.to/napicella/linux-terminals-tty-pty-and-shell-192e
+
+- **Pseudo Devices**
+  - TBD
+
+- **Process vs Process Group vs Session**
+  - **Process:** A process is a running instance of a launched, executable program. Remember that even if you launch a single process, the system still creates a process group.
+
+  - **Process Groups:** Process group is a collection of one or more processes. A process group constitutes of one or more processes sharing the same process group identifier (PGID). A process group has a process group leader, which is the process that creates the group and whose process ID(PID) becomes the process group ID(PGID) of the group.
+
+    **Note**: A process group is a unix kernel concept and Jobs are an internal concept to the shell. In the simple cases, each job in a shell corresponds to a process group in the kernel. Therefore, to keep things simple, think Jobs and process groups as same.
+
+  - **Sessions:** It is a collection of various process groups. All process groups that you launch in your terminal will belong to the same session. Therefore, each terminal can be thought as a session, and can have a foreground process and any number of independent background processes. A job is part of exactly one session: the one belonging to its controlling terminal.
+
+  In Short, processes are grouped together into process groups. Process groups are grouped together into sessions.
+
+- **Controlling Terminal (ctty)**
+  - Every session is tied to a terminal from which processes in the session get their input and to which they send their output. Although, that terminal doesn't necessarily become the controlling terminal of the process.
+  
+  - The controlling terminal is the login session in which a program was invoked. If you log in to a system to start a bash session (or csh, or ksh, or whatever your shell is), then the shell's controlling terminal is your login session. If you then type 'cat /etc/passwd', the controlling terminal of 'cat' is your login session.
+
+  - A terminal can be the controlling terminal for only one session at a time. Although the controlling terminal for a session can be changed, this is usually done only by processes that manage a user's initial logging in to a system.
+
+  - A session may or may not have a controlling terminal (ctty).  don't really have a controlling terminal because Some processes are started by **_init_** or some other mechanism that doesn't require a terminal - Apache, MySQL, Postfix, etc. don't normally have a controlling terminal per se.
+
+  - The ctty controls processes by sending signals to them, hence the name. A process will never receive a signal from a terminal that is not its ctty, although it may receive a signal from a process that is running with a different ctty.
+
+  - With controlling terminal, process is able to tell kernel which process group is foreground process group (in same session). If there is a foreground process group for a terminal, we can control the foreground process group via the terminal, e.g., Ctrl-C/Ctrl-\ to terminate the foreground process group. (A terminal may have only one foreground process group, or may not have any. To put it precisely, a terminal can only be associated with one process session.)
+
+- **Background vs Foreground Job**
+  - Most commands issued from an interactive shell run in foreground. That basically means that you must wait for the executed command (or processes) to stop before doing something else. if you have run a command that takes a lot of time to complete, you must wait until it is finished to run another command.
+
+  - If you know before you type a command that it's going to take a really long time to complete, and you want to get something else done in the mean time, you can background it when you start it by putting an ampersand **&** at the end of a command. You can also use ctrl-Z to suspend a foreground process/job and throw it in the background with the `bg` command. You can thereafter manage these backgrounds tasks using `jobs` command.
+
+  - There may be some cases when a background command waits for user input. Thus you will need to bring back that job to foreground. Background processes of a terminal cannot read input or receive keyboard generated interrupts(ctl+c, ctrl+z) from the terminal, but may be able to write to the terminal. A job in the background may be stopped (suspended) or it may be running. If a running background job tries to read from the terminal, it will be automatically suspended.
+  
+  - If you end your terminal session (through closing the terminal, logout, shutdown, etc.), background jobs that are still running or suspended may be also killed.
+
+  - You can have only one foreground process group in the session. Thus, if you want to run several process groups at the same time then you need background process groups.It is also possible to move the jobs from the background to the foreground and vice-versa using _fg_ or _bg_ command
+
+  - To stop the current running process, you need to enter `CTRL+Z`. This gives you a job number. If needed, the job can be resumed either in the foreground using the `fg command` or the background using the `bg command`. However, By using _fg_ or _bg_ command, it would run only the last stopped process. What if you want to start other than the last stopped process? Just use the job number after fg or bg (say bg %2 or bg %3, etc). If the running job is in the background, you can run any other tasks in the foreground. To get the list of jobs, use command, `jobs`.
+
+  - It is also possible to terminate the process either with CTRL+C or kill command. You can pass the job number while using the kill command.
+
+### Describing Jobs and Sessions
+
+- **_Job control_** is a feature of the shell which allows a single shell instance to run and manage multiple commands. This permits a shell user to simultaneously execute multiple commands (or jobs), one in the foreground and all remaining in the background.
+
+- A job is associated with each pipeline entered at a shell prompt. All processes in that pipeline are part of the job and are members of the same process group. If only one command is entered at a shell prompt, that can be considered to be a minimal “pipeline” of one command, creating a job with only one member.
+
+- Only one job can read input and keyboard generated signals from a particular terminal window at a time. Processes that are part of that job are foreground processes of that controlling terminal.
+
+- A background process of that controlling terminal is a member of any other job associated with that terminal. Background processes of a terminal cannot read input or receive keyboard generated interrupts from the terminal, but may be able to write to the terminal. A job in the background may be stopped (suspended) or it may be running. If a running background job tries to read from the terminal, it will be automatically suspended.
+
+- Each terminal is its own session, and can have a foreground process and any number of independent background processes. A job is part of exactly one session: the one belonging to its controlling terminal.
+
+- The `ps` command shows the device name of the _controlling terminal_ of a process in the TTY column. Some processes, such as _system daemons_, are started by the system and not from a shell prompt. These processes do not have a controlling terminal, are not members of a job, and cannot be brought to the foreground. The **ps** command displays a question mark (?) in the TTY column for these processes.
+
+### **Running Jobs in the Background**
+
+- Any command or pipeline can be started in the background by appending an ampersand (&) to the end of the command line. The Bash shell displays a job number (unique to the session) and the PID(unique system-wide) of the new child process. The shell does not wait for the child process to terminate, but rather displays the shell prompt.
+
+   ```bash
+   # Job Number is 1
+   # PID 5947
+   [user@host ~]$ sleep 10000 &
+   [1] 5947
+   ```
+
+- When a command line containing a pipe is sent to the background using an ampersand, the PID of the last command in the pipeline is used as output. All processes in the pipeline are still members of that job.
+
+   ```bash
+   [user@host ~]$  example_command | sort | mail -s "Sort output" &
+   [1] 5998
+
+   # You can display the list of jobs that Bash is tracking for a particular session with the jobs command.
+   [user@host ~]$ jobs
+   [1]+  Running        sleep 10000 &
+
+   # A background job can be brought to the foreground by using the fg command with its job ID (%job number).
+   # the sleep command will then run in the foreground on the controlling terminal. The shell itself is again asleep, waiting for this child process to exit.
+   [user@host ~]$ fg %1
+   sleep 10000
+
+   # To send a foreground process to the background, first press the keyboard generated suspend request (Ctrl+z) in the terminal. The job is immediately placed in the background and is suspended.
+   ^Z
+   [1]+  Stopped                 sleep 10000
+
+   # To start the suspended process running in the background, use the bg command with the same job ID.
+   [user@host ~]$ bg %1
+   [1]+ sleep 10000 &
+
+   # You cannot suspend(ctrl+z) or terminate(ctrl+c) a background process.
+   # You can only suspend or terminate a foreground process
+   # hence, to terminate or suspend a background process, first bring it to the foreground usinf the fg command and then terminate or suspend it
+   [student@servera ~]$ fg %1
+   sleep 100000
+   ^Z
+   [1]+  Stopped                 sleep 10000
+   ```
+
+   Note: the `+` sign after the `[1]` in the examples above. The + sign indicates that this job is the current default job. That is, if a command is used that expects a %job number argument and a job number is not provided, then the action is taken on the job with the + indicator.
+
+- The shell will warn a user who attempts to exit a terminal window (session) with suspended jobs. If the user tries exiting again immediately, the suspended jobs are killed.
+
+- The `ps j` command displays information relating to jobs. The _PID_ is the unique process ID of the process. THe _PPID_ is the PID of the parent process of this process, the process that started (forked) it. The _PGID_ is the PID of the process group leader, normally the first process in the job's pipeline. The _SID_ is the PID of the session leader, which (for a job) is normally the interactive shell that is running on its controlling terminal. Since the example sleep command is currently suspended, its process state is T.
+
+  ```bash
+  [user@host ~]$ ps j
+   PPID   PID  PGID   SID TTY      TPGID STAT   UID   TIME COMMAND
+   2764  2768  2768  2768 pts/0     6377 Ss    1000   0:00 /bin/bash
+   2768  5947  5947  2768 pts/0     6377 T     1000   0:00 sleep 10000
+   2768  6377  6377  2768 pts/0     6377 R+    1000   0:00 ps j
+   ```
+
+## **8.5.** Killing Processes
+
+### Process control using signals
+
+- A signal is a software interrupt delivered to a process. Signals report events to an executing program. Events that generate a signal can be an error, external event (an I/O request or an expired timer), or by explicit use of a signal-sending command or keyboard sequence.
+
+- The following table lists the fundamental signals used by system administrators for routine process management. Refer to signals by either their short (HUP) or proper (SIGHUP) name. (In proper name, just add the Prefix ''SIG' to the short name. ex, Short name 'INT', proper name 'SIGINT')
+
+  Signal number | Short name | Definition | Purpose
+  --------------|------------|------------|--------
+  1 | HUP | Hangup | Used to report termination of the controlling process of a terminal. Also used to request process reinitialization (configuration reload) without termination.
+  2 | INT | Keyboard interrupt | Causes program termination. Can be blocked or handled. Sent by pressing INTR key sequence (Ctrl+c).
+  3 | QUIT | Keyboard quit | Similar to SIGINT; adds a process dump at termination. Sent by pressing QUIT key sequence (Ctrl+\).
+  9 | KILL | Kill, unblockable | Causes abrupt program termination. Cannot be blocked, ignored, or handled; always fatal.
+  15 (default) | TERM | Terminate | Causes program termination. Unlike SIGKILL, can be blocked, ignored, or handled. The “polite” way to ask a program to terminate; allows self-cleanup.
+  18 | CONT | Continue | Sent to a process to resume, if stopped. Cannot be blocked. Even if handled, always resumes the process.
+  19 | STOP | Stop, unblockable | Suspends the process. Cannot be blocked or handled.
+  20 | TSTP | Keyboard stop | Unlike SIGSTOP, can be blocked, ignored, or handled. Sent by pressing SUSP key sequence (Ctrl+z).
+
+  NOTE: Signal numbers vary on different Linux hardware platforms, but signal names and meanings are standardized. For command use, it is advised to use signal names instead of numbers. The numbers discussed in this section are for x86_64 systems.
+
+- Each signal has a default action, usually one of the following:
+  - **Term** - Cause a program to terminate (exit) at once.
+  - **Core** - Cause a program to save a memory image (core dump), then terminate.
+  - **Stop** - Cause a program to stop executing (suspend) and wait to continue (resume).
+
+  Programs can be prepared to react to expected event signals by implementing handler routines to ignore, replace, or extend a signal's default action.
+
+- You signal the current foreground process by pressing a keyboard control sequence to suspend (_Ctrl+z_), kill (_Ctrl+c_), or core dump (_Ctrl+\\_) the process. However, you will use **the signal-sending commands** like `kill` to send signals to a background process or to processes in a different session.
+
+- Signals can be specified as options either by name (for example, -HUP or -SIGHUP) or by number (-1).
+  
+- Users may kill their own processes, but root privilege is required to kill processes owned by others.
+
+- The `kill` command sends a signal to a process by PID number. Despite its name, the kill command can be used to send any signal, not just those for terminating programs. You can use the `kill -l` command to list the names and numbers of all available signals.
+
+   ```bash
+   [user@host ~]$ kill -l
+   1) SIGHUP      2) SIGINT      3) SIGQUIT     4) SIGILL      5) SIGTRAP
+   6) SIGABRT     7) SIGBUS      8) SIGFPE      9) SIGKILL    10) SIGUSR1
+  11) SIGSEGV    12) SIGUSR2    13) SIGPIPE    14) SIGALRM    15) SIGTERM
+  16) SIGSTKFLT  17) SIGCHLD    18) SIGCONT    19) SIGSTOP    20) SIGTSTP
+  ...output omitted...
+
+  [user@host ~]$ ps aux | grep job
+  5194  0.0  0.1 222448  2980 pts/1    S    16:39   0:00 /bin/bash /home/user/bin/  control job1
+  5199  0.0  0.1 222448  3132 pts/1    S    16:39   0:00 /bin/bash /home/user/bin/  control job2
+  5205  0.0  0.1 222448  3124 pts/1    S    16:39   0:00 /bin/bash /home/user/bin/  control job3
+  5430  0.0  0.0 221860  1096 pts/1    S+   16:41   0:00 grep --color=auto job
+
+  [user@host ~]$ kill 5194
+
+  [user@host ~]$ ps aux | grep job
+  user   5199  0.0  0.1 222448  3132 pts/1    S    16:39   0:00 /bin/bash /home/user/bin/control job2
+  user   5205  0.0  0.1 222448  3124 pts/1    S    16:39   0:00 /bin/bash /home/user/bin/control job3
+  user   5783  0.0  0.0 221860   964 pts/1    S+   16:43   0:00 grep --color=auto job
+  [1]   Terminated              control job1
+
+  [user@host ~]$ kill -9 5199
+  [user@host ~]$ ps aux | grep job
+  user   5205  0.0  0.1 222448  3124 pts/1    S    16:39   0:00 /bin/bash /home/user/bin/control job3
+  user   5930  0.0  0.0 221860  1048 pts/1    S+   16:44   0:00 grep --color=auto job
+  [2]-  Killed                  control job2
+
+  [user@host ~]$ kill -SIGTERM 5205
+  user   5986  0.0  0.0 221860  1048 pts/1    S+   16:45   0:00 grep --color=auto job
+  [3]+  Terminated              control job3
+  ```
+
+- The `killall` command can signal multiple processes, based on their command name.
+
+   ```bash
+   [user@host ~]$ ps aux | grep job
+  5194  0.0  0.1 222448  2980 pts/1    S    16:39   0:00 /bin/bash /home/user/bin/control job1
+  5199  0.0  0.1 222448  3132 pts/1    S    16:39   0:00 /bin/bash /home/user/bin/control job2
+  5205  0.0  0.1 222448  3124 pts/1    S    16:39   0:00 /bin/bash /home/user/bin/control job3
+  5430  0.0  0.0 221860  1096 pts/1    S+   16:41   0:00 grep --color=auto job
+
+  [user@host ~]$ killall control
+  [1]   Terminated              control job1
+  [2]-  Terminated              control job2
+  [3]+  Terminated              control job3
+   ```
+
+- Use `pkill` to send a signal to one or more processes which match selection criteria. Selection criteria can be a command name, a process owned by a specific user, or all system-wide processes. The _pkill_ command includes advanced selection criteria:
+
+  - **Command** - Processes with a pattern-matched command name.
+  - **UID** - Processes owned by a Linux user account, effective or real.
+  - **GID** - Processes owned by a Linux group account, effective or real.
+  - **Parent** - Child processes of a specific parent process.
+  - **Terminal** - Processes running on a specific controlling terminal.
+
+   ```bash
+   [user@host ~]$ ps aux | grep pkill
+  user   5992  0.0  0.1 222448  3040 pts/1    S    16:59   0:00 /bin/bash /home/user/bin/control pkill1
+  user   5996  0.0  0.1 222448  3048 pts/1    S    16:59   0:00 /bin/bash /home/user/bin/control pkill2
+  user   6004  0.0  0.1 222448  3048 pts/1    S    16:59   0:00 /bin/bash /home/user/bin/control pkill3
+
+  [user@host ~]$ pkill control
+  [1]   Terminated              control pkill1
+  [2]-  Terminated              control pkill2
+
+  [user@host ~]$ ps aux | grep pkill
+  user   6219  0.0  0.0 221860  1052 pts/1    S+   17:00   0:00 grep --color=auto pkill
+  [3]+  Terminated              control pkill3
+
+  [user@host ~]$ ps aux | grep test
+  user   6281  0.0  0.1 222448  3012 pts/1    S    17:04   0:00 /bin/bash /home/user/bin/control test1
+  user   6285  0.0  0.1 222448  3128 pts/1    S    17:04   0:00 /bin/bash /home/user/bin/control test2
+  user   6292  0.0  0.1 222448  3064 pts/1    S    17:04   0:00 /bin/bash /home/user/bin/control test3
+  user   6318  0.0  0.0 221860  1080 pts/1    S+   17:04   0:00 grep --color=auto test
+
+  [user@host ~]$ pkill -U user
+
+  [user@host ~]$ ps aux | grep test
+  user   6870  0.0  0.0 221860  1048 pts/0    S+   17:07   0:00 grep --color=auto test
+   ```
+
+### Logging Users Out Administratively
+
+- You may need to log other users off for any of a variety of reasons. To name a few of the many possibilities:
+  - the user committed a security violation
+  - the user may have overused resources
+  - the user may have an unresponsive system
+  - the user has improper access to materials. 
+  
+  In these cases, you may need to administratively terminate their session using signals.
+
+- To log off a user, first identify the login session to be terminated. Use the `w` command to list user logins and current running processes. Note the _TTY_ and _FROM_ columns to determine the sessions to close.
+
+   ```bash
+   [user@host ~]$ w
+   12:43:06 up 27 min,  5 users,  load average: 0.03, 0.17, 0.66
+   USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU   WHAT
+   root     tty2                      12:26   14:58   0.04s  0.04s  -bash
+   bob      tty3                      12:28   14:42   0.02s  0.02s  -bash
+   user     pts/1    desk.example.com 12:41    2.00s  0.03s  0.03s   w
+   ```
+
+  - All user login sessions are associated with a terminal device (TTY). If the device name is of the form **_pts/N_**, it is a _pseudo-terminal_ associated with a graphical terminal window or remote login session. If it is of the form **_ttyN_**, the user is on a system console, alternate console, or other directly connected terminal device.
+
+  - Discover how long a user has been on the system by viewing the session login time. For each session, CPU resources consumed by current jobs, including background tasks and child processes, are in the _JCPU column_. Current foreground process CPU consumption is in the _PCPU column_.
+
+- Processes and sessions can be individually or collectively signaled. To terminate all processes for one user, use the `pkill` command. Because the initial process in a login session (session leader) is designed to handle session termination requests and ignore unintended keyboard signals, killing all of a user's processes and login shells requires using the SIGKILL signal.
+
+  **IMPORTANT:** SIGKILL is commonly used too quickly by administrators. Since the SIGKILL signal cannot be handled or ignored, it is always fatal. However, it forces termination without allowing the killed process to run self-cleanup routines. It is recommended to send SIGTERM first, then try SIGINT, and only if both fail retry with SIGKILL.
+
+- First identify the PID numbers to be killed using `pgrep` command, which operates much like the `pkill` command, including the same options, except that pgrep lists processes rather than killing them.
+
+   ```bash
+   [root@host ~]$ pgrep -l -u bob
+   6964 bash
+   6998 sleep
+   6999 sleep
+   7000 sleep
+
+   [root@host ~]$ pkill -SIGKILL -u bob
+   [root@host ~]$ pgrep -l -u bob
+   [root@host ~]$
+   ```
+
+- When processes requiring attention are in the same login session, it may not be necessary to kill all of a user's processes. Determine the controlling terminal for the session using the `w` command, then kill only processes referencing the same terminal ID. Unless SIGKILL is specified, the session leader (here, the Bash login shell) successfully handles and survives the termination request, but all other session processes are terminated.
+
+   ```bash
+   [root@host ~]$ pgrep -l -u bob
+   7391 bash
+   7426 sleep
+   7427 sleep
+   7428 sleep
+
+   [root@host ~]$ w -h -u bob
+   bob      tty3      18:37    5:04   0.03s  0.03s -bash
+
+   [root@host ~]$ pkill -t tty3
+   [root@host ~]$ pgrep -l -u bob
+   7391 bash
+
+   [root@host ~]$ pkill -SIGKILL -t tty3
+   [root@host ~]$ pgrep -l -u bob
+   [root@host ~]$
+   ```
+
+- The same selective process termination can be applied using parent and child process relationships. Use the `pstree` command to view a process tree for the system or a single user. Use the parent process's PID to kill all children they have created. This time, the parent Bash login shell survives because the signal is directed only at its child processes.
+
+   ```bash
+   [root@host ~]$ pstree -p bob
+   bash(8391)─┬─sleep(8425)
+              ├─sleep(8426)
+              └─sleep(8427)
+
+   [root@host ~]$ pkill -P 8391
+   [root@host ~]$ pgrep -l -u bob
+   bash(8391)
+
+   [root@host ~]$ pkill -SIGKILL -P 8391
+   [root@host ~]$ pgrep -l -u bob
+   bash(8391)
+   ```
+
+
+</br></br>
