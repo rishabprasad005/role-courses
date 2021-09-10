@@ -505,7 +505,7 @@
        </tr>
         <tr>
                      <td> $ command > file  2>&1 </ td> 
-                     <td rowspan = "3"> redirect stdout and stderr to overwrite the same file. <br> [`&1` and `&2` means default pace for standard output i.e. terminal] </ td> 
+                     <td rowspan = "3"> redirect stdout and stderr to overwrite the same file. <br> [See below for what `&1` and `&2` means </ td> 
        </tr>
        <tr>
                      <td> $ command 1> file  2>&1 </ td> 
@@ -545,7 +545,7 @@
 
 ### Pipelines, Redirection and the 'tee' Command
 
-- A pipeline is a sequence of one or more commands separated by the pipe character (|). A pipe connects the standard output of the first command to the standard input of the next command. 
+- A pipeline is a sequence of one or more commands separated by the pipe character `|`. A pipe connects the standard output of the first command to the standard input of the next command. 
   
 - Pipelines allow the output of a process to be manipulated and formatted by other processes before it is output to the terminal. One useful mental image is to imagine that data is "flowing" through the pipeline from one process to another, being altered slightly by each command in the pipeline through which it flows.
 
@@ -654,7 +654,7 @@ When you export that variable like export SOME_ENV_VARIABLE that variable is now
 
 **Analogy**: let's assume you have a two-bedroom apartment and you are sharing it with another roommate. The common area can be accessed by anyone but not your bedrooms, environment variable is like common area and shell variable is like bedroom, if you will something in common area it can be accessed by anyone but if you keep it in your bedroom it can only be accessed by you.
 
-Remember if open a new terminal you won't be able to access either of the variables because you are changing that instance. For that you should add your variables in either .profile or .bashrc (if you are using bash).
+Remember if open a new terminal you won't be able to access either of the variables because you are changing that instance. For that you should add your variables in either .profile or .bashrc (if you are using bash). Opening a new terminal is similar to buying another apartment in the same building. Now again, whatever items are available in the first flat, be it in the common area or bedroom, will not be accessible in the second flat. Now, .profile or .bashrc is like common area of the building like park, gym, swimming pool etc and all the people of the building will have access to it.
 
 ### Configuring Programs with Environment Variables
 
@@ -892,7 +892,10 @@ Remember if open a new terminal you won't be able to access either of the variab
 
   In most cases, administrators should run **su -** to get a shell with the target user's normal environment settings. For more information, see the bash(1) man page.
 
-  For more detailed explanation, please click [here](https://www.tecmint.com/difference-between-su-and-su-commands-in-linux/)
+  For more detailed explanation, <br>
+  **sudo** vs **su**  and how to grant sudo priviledges: please click [here](https://www.tecmint.com/su-vs-sudo-and-how-to-configure-sudo-in-linux/)<br>
+  **su** vs **su -** : please click [here](https://www.tecmint.com/difference-between-su-and-su-commands-in-linux/)
+
 
 ### Running Commands with Sudo
 
@@ -1270,7 +1273,7 @@ Remember if open a new terminal you won't be able to access either of the variab
   
     # set only read permission for group
     # using = will override all the existing permissions and set only read permission
-    [home@virtualbox]$ chmod g=w sample
+    [home@virtualbox]$ chmod g=r sample
     [home@virtualbox]$ ls -l sample
     -rwxr--r-- 1 home home 55 2012-09-10 10:59 sample
   
@@ -1306,7 +1309,7 @@ Remember if open a new terminal you won't be able to access either of the variab
   - The permissions number of a specific user class is represented by the sum of the values of the permissions for that group. For example:-
     - **rwx** :4+2+1 = 7
     - **r-x** : 4+0+1 = 5
-    - **r-x** : 4+0+0 = 4
+    - **r- -** : 4+0+0 = 4
     - **- - -** : 0+0+0 = 0
 
   - **Examples:-**
@@ -1335,7 +1338,7 @@ Remember if open a new terminal you won't be able to access either of the variab
 
 - **Operating on Symbolic Links:** Symbolic links will always have `777` permissions. If you try to change the permissions of a symbolic link, `chmod` will change the permissions of the actual file the link is pointing to. 
 
-  One thing to note is that, you might not be able to chnage the target file permissions. Instead you might get a “_cannot access ‘symlink’: Permission denied_” error. The error occurs because by default on most Linux distributions symlinks are protected, and you cannot operate on target files.
+  One thing to note is that, you might not be able to change the target file permissions. Instead you might get a “_cannot access ‘symlink’: Permission denied_” error. The error occurs because by default on most Linux distributions symlinks are protected, and you cannot operate on target files.
   
 - **Using a Reference File:** The `--reference` option allows you to set the file’s permissions to be same as those of the specified reference file. For example, the following command will assign the permissions of the _file1_ to _file2_:-
 
