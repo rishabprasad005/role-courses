@@ -114,6 +114,10 @@
 
 ## **2.3.** Accessing the Command Line Using the Desktop
 
+- **What is GNOME?**
+
+GNOME (GNU Network Object Model Environment, pronounced gah-NOHM) is a graphical user interface (GUI) and set of computer desktop applications for users of the Linux operating system. It's intended to make a Linux operating system easy to use for non-programmers and generally corresponds to the Windows desktop interface and its most common set of applications. In fact, GNOME allows the user to select one of several desktop appearances. With GNOME, the user interface can, for example, be made to look like Windows or like Mac OS. In addition, GNOME includes a set of the same type of applications found in Microsoft Office: a word processor, a spreadsheet program, a database manager, a presentation developer, a Web browser and an email program.
+
 - The desktop environment is the graphical user interface on a Linux system. **The default desktop environment in Red Hat Enterprise Linux 8 is provided by GNOME 3**. It provides an integrated desktop for users and a unified development platform on top of a graphical framework provided by either Wayland (by default) or the legacy X Window System.
 
 - GNOME Shell provides the core user interface functions for the GNOME desktop environment. The GNOME Shell application is highly customizable. Red Hat Enterprise Linux 8 defaults GNOME Shell's look and feel to the "Standard" theme, which is used in this section. Red Hat Enterprise Linux 7 defaulted to an alternative theme named "Classic" that was closer to the look and feel of older versions of GNOME. Either theme can be selected persistently at login by clicking the gear icon next to the Sign In button that is available after selecting your account but before entering your password. 
